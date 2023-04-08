@@ -1,4 +1,6 @@
-import { defineUserConfig } from "vuepress";
+import { defineUserConfig, viteBundler } from "vuepress";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 import theme from "./theme.js";
 
 export default defineUserConfig({
@@ -16,6 +18,16 @@ export default defineUserConfig({
       description: "vuepress-theme-hope 的博客演示",
     },
   },
+
+  bundler: viteBundler({
+    viteOptions: {
+      css: {
+        postcss: {
+          plugins: [tailwindcss, autoprefixer],
+        },
+      },
+    },
+  }),
 
   theme,
 
