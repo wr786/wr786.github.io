@@ -5,14 +5,6 @@ import theme from "./theme.js";
 
 export default defineUserConfig({
   base: "/",
-  
-  locales: {
-    "/": {
-      lang: "zh-CN",
-      title: "wr786的空间",
-      description: "分享明天",
-    },
-  },
 
   bundler: viteBundler({
     viteOptions: {
@@ -23,6 +15,14 @@ export default defineUserConfig({
       },
     },
   }),
+
+  locales: {
+    "/": {
+      lang: "zh-CN",
+      title: "wr786的空间",
+      description: "分享明天",
+    },
+  },
 
   theme
 

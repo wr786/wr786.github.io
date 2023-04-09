@@ -1,6 +1,6 @@
 import { hopeTheme } from "vuepress-theme-hope";
-import { enNavbar, zhNavbar } from "./navbar/index.js";
-import { enSidebar, zhSidebar } from "./sidebar/index.js";
+import { zhNavbar } from "./navbar/index.js";
+import { zhSidebar } from "./sidebar/index.js";
 import { getDirname, path } from "@vuepress/utils";
 
 const __dirname = getDirname(import.meta.url);
@@ -19,7 +19,7 @@ export default hopeTheme({
 
   repo: "wr786/wr786.github.io",
 
-  docsDir: "docs",
+  docsDir: "src",
 
   blog: {
     medias: {
@@ -42,7 +42,7 @@ export default hopeTheme({
       // sidebar
       sidebar: zhSidebar,
 
-      footer: "Default footer",
+      footer: "分享明天",
 
       displayFooter: true,
 
@@ -52,7 +52,7 @@ export default hopeTheme({
       },
 
       metaLocales: {
-        editLink: "Edit this page on GitHub",
+        editLink: "编辑此页",
       },
     },
   },
@@ -68,6 +68,15 @@ export default hopeTheme({
       repoId: "R_kgDOJUK89A", //对应自己的仓库Id
       category: "Announcements",
       categoryId: "DIC_kwDOJUK89M4CVoKO" //对应自己的分类Id
+    },
+
+    copyright: {
+      // 全局启用版权信息
+      global: true,
+      // 禁用复制
+      disableCopy: false,
+      // 版权信息
+      license: "CC BY-NC-SA 4.0",
     },
 
     // all features are enabled for demo, only preserve features you need here
