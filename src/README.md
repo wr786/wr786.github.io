@@ -8,10 +8,9 @@ heroText: wr786的空间
 heroFullScreen: true
 tagline: 好好生活。
 bgImage: https://images2.alphacoders.com/947/947089.jpg
-# projects:
-#   - icon: project
-#     name: 项目名称
-#     desc: 项目详细描述
-#     link: https://你的项目链接
-footer: 分享明天
+projects:
+  - icon: https://github.com/TeddyHuang-00.png?size=256
+    name: TeddyHuang-00
+    desc: 日趋专业的全栈开发者
+    link: https://teddyhuang-00.github.io/zh/
 ---
