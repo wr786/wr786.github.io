@@ -20,7 +20,7 @@ export default defineUserConfig({
     "/": {
       lang: "zh-CN",
       title: "wr786的空间",
-      description: "分享明天",
+      description: "日々進化中",
     },
   },
 

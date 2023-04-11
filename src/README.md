@@ -7,7 +7,7 @@ heroImage: /computer.svg
 heroText: wr786的空间
 heroFullScreen: true
 sidebar: false
-tagline: 好好生活。
+tagline: 日々進化中
 bgImage: https://images2.alphacoders.com/947/947089.jpg
 projects:
   - icon: https://github.com/TeddyHuang-00.png?size=256
