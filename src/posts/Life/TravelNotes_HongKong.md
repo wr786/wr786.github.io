@@ -10,6 +10,8 @@ sticky: false
 star: false
 ---
 2023年3月24日～3月29日，我前往了香港，这也是我第一次出境，故将随感胡乱记下。
+
+![Bushiroad Expo Asia 2023](/assets/images/BushiroadExpoAsia2023.jpeg)
 <!-- more -->
 # 物价差异
 在大陆，一瓶普通的矿泉水只需¥2～3；而在香港的自动贩卖机与711之中，一瓶普通矿泉水的价格一般在HK$15左右，折合成人民币也是十几元。

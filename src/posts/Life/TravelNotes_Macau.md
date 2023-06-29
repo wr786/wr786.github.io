@@ -10,6 +10,8 @@ sticky: false
 star: false
 ---
 2023年3月24日～3月29日，我前往了香港，然而在3月28日，我趁机去了澳门，当日通过喷射飞航往返，时间虽短，但也略有所感，故为之记。
+
+![Ruins of St.Paul's](/assets/images/Ruins_of_St.Pauls.jpeg)
 <!-- more -->
 
 相比于香港，澳门普通话更多，甚至可以用境内的支付宝与微信进行支付，而不是AlipayHK与WechatPayHK。
