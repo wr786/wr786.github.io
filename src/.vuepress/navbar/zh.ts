@@ -17,6 +17,11 @@ export const zhNavbar = navbar([
         icon: "code",
         link: "Tech/",
       },
+      {
+        text: "随想",
+        icon: "code",
+        link: "Scribble/",
+      },
     ],
   },
 ]);
