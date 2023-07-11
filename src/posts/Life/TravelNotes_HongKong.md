@@ -7,7 +7,7 @@ category:
 tag:
   - 游记
 sticky: false
-star: false
+star: true
 ---
 2023年3月24日～3月29日，我前往了香港，这也是我第一次出境，故将随感胡乱记下。
 

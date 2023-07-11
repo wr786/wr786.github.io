@@ -7,7 +7,7 @@ category:
 tag:
   - 起居
 sticky: false
-star: false
+star: true
 ---
 
 终于毕业了，但是毕业了也就意味着分别，分别也就意味着我得搬离了，并且是跨省搬家。

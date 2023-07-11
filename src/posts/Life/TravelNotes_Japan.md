@@ -7,7 +7,7 @@ category:
 tag:
   - 游记
 sticky: false
-star: false
+star: true
 ---
 
 2023年4月29日～5月8日，我前往了日本，并主要游于东京、京都、大阪，这也是我第一次出国，遂记录所闻所感。

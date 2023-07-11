@@ -7,7 +7,7 @@ category:
 tag:
   - 起居
 sticky: false
-star: false
+star: true
 ---
 
 刚开始租房就和开荒一样，这也缺那也缺，每过一会儿就会发现一个新的缺的东西。
