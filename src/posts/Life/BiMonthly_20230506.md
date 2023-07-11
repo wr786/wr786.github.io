@@ -17,8 +17,8 @@ star: false
 <!-- more -->
 
 其中包括：
-- [西安&南昌](./TravelNotes_Xi'an%26Nanchang.md)
-- [🇭🇰香港&🇲🇴澳门](./TravelNotes_HongKong%26Macau_II.md)
+- [西安&南昌](./TravelNotes_Xi'an_Nanchang.md)
+- [🇭🇰香港&🇲🇴澳门](./TravelNotes_HongKong_Macau_II.md)
 - 合肥
 - 杭州
 - 丽水
