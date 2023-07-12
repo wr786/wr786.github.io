@@ -1,5 +1,5 @@
 ---
-title: 【にゃるら】[220124] 一口エッセイ:好き？好き？大好き？　（原題: Do You Love Me?）
+title: '【にゃるら】[220124] 一口エッセイ:好き？好き？大好き？　（原題: Do You Love Me?）'
 icon: material-symbols:article
 date: 2023-07-12
 category:
