@@ -19,9 +19,14 @@ export const zhNavbar = navbar([
       },
       {
         text: "随想",
-        icon: "code",
+        icon: "edit",
         link: "Scribble/",
       },
+      {
+        text: "翻译",
+        icon: "edit",
+        link: "Translate/",
+      }
     ],
   },
 ]);
