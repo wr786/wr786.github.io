@@ -6,9 +6,9 @@ category:
   - 翻译
 tag:
   - 日语
-  - ACG
+  - ACGN
 sticky: false
-star: true
+star: false
 ---
 
 ![](/assets/images/nyalra_sukisukidaisuki/1.avif)
