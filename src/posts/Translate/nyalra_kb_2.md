@@ -1,7 +1,7 @@
 ---
 title: '【奈亚拉面壁自语】第2回｜喜欢深夜的互联网 【221129】'
 icon: material-symbols:article
-date: 2023-08-27
+date: 2023-08-26
 category:
   - 翻译
 tag:
