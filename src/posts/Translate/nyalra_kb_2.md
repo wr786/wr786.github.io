@@ -7,6 +7,7 @@ category:
 tag:
   - 日语
   - ACGN
+  - 翻译
 sticky: false
 star: false
 ---
