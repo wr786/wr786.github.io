@@ -1,5 +1,5 @@
 ---
-title: '【奈亚拉面壁自语】第8回｜男人在孤独的夜晚都做些什么呢【220110】'
+title: '【奈亚拉面壁自语】第8回｜男人在孤独的夜晚都做些什么呢【230110】'
 icon: material-symbols:article
 date: 2023-09-03
 category:

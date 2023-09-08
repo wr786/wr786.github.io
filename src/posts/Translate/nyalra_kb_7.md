@@ -1,5 +1,5 @@
 ---
-title: '【奈亚拉面壁自语】第7回｜渴望话题的狼不会入眠【220103】'
+title: '【奈亚拉面壁自语】第7回｜渴望话题的狼不会入眠【230103】'
 icon: material-symbols:article
 date: 2023-09-02
 category:
