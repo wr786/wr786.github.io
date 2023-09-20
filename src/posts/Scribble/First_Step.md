@@ -6,6 +6,7 @@ category:
   - 随想
 tag:
   - ACGN
+  - 随笔
 sticky: false
 star: true
 ---
