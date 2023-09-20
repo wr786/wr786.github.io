@@ -7,7 +7,7 @@ category:
 tag:
   - 吃吃吃
   - 评测
-sticky: true
+sticky: false
 star: true
 ---
 
