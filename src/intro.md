@@ -8,3 +8,5 @@ sticky: true
 我，wr786，INFP，喜欢宅又喜欢出去。
 
 仍在自闭中。
+
+![V我50](/assets/images/buy_me_a_figure.png)
