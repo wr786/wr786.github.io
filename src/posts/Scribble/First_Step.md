@@ -1,5 +1,5 @@
 ---
-title: VS社恐·迈出第一步
+title: 【二次元冒险记·I】VS社恐·迈出第一步
 icon: material-symbols:article
 date: 2023-08-03
 category:
@@ -7,6 +7,7 @@ category:
 tag:
   - ACGN
   - 随笔
+  - 二次元冒险记
 sticky: false
 star: true
 ---
