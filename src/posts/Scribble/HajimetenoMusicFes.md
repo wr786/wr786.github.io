@@ -1,5 +1,5 @@
 ---
-title: 【三次元冒险记·I】初次的音乐节
+title: 【三次元冒险记·I】初回的音乐节
 icon: material-symbols:article
 date: 2023-10-06
 category:
