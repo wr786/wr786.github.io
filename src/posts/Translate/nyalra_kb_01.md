@@ -1,5 +1,5 @@
 ---
-title: '【奈亚拉面壁自语】第1回｜我是にゃるら 【221122】'
+title: '【奈亚拉面壁自语】第01回｜我是にゃるら 【221122】'
 icon: material-symbols:article
 date: 2023-08-25
 category:
