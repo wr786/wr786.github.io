@@ -13,7 +13,7 @@ sticky: false
 star: false
 ---
 
-如果你有这样的情景：需要创建一个字典，而字典的key都是很短（长度不超过8）的字符串，那么你会怎么做呢？
+如果你有这样的情景：需要创建一个字典，而字典的key都是很短（长度不超过8）的字符串，同时你又需要追求高性能，希望能达到纳秒级的时延优化，那么你会怎么做呢？
 
 <!-- more -->
 
@@ -31,11 +31,13 @@ std::unordered_map<std::string, T> dict;
 ```cpp
 std::unordered_map<uint64_t, T> dict;
 char str[10];   // strlen(str) <= 8
-dict.emplace({*reintepret_cast<uint64_t*>(str), _});
+dict.insert({*reintepret_cast<uint64_t*>(str), _});
 ```
 
-这么一看你就懂了吧！无须多言。最后我们上个效率对比吧，来看看我们这回的奇技淫巧能有多大的提升：
+这么一看你就懂了吧！无须多言。最后我们上个效率对比吧，看看能有多大的提升：
 
 ![可以看到，find操作是2.6倍的快](/assets/images/HPCTricks_map_with_string_keys_benchmark.png)
 
 你也可以[在此在线观看这个benchmark](https://quick-bench.com/q/yiUMubp7mDrmwQh4zJVML8q2Pw4)。
+
+此外，你也可以考虑采取其它实现方式的map，比如这里有位大神总结的[Comprehensive C++ Hashmap Benchmarks 2022](https://martin.ankerl.com/2022/08/27/hashmap-bench-01/)，根据你需要的场景，选择更合适的map，也能继续压低时延。
