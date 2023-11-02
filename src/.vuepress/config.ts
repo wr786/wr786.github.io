@@ -6,6 +6,22 @@ import theme from "./theme.js";
 export default defineUserConfig({
   base: "/",
 
+  head: [
+    // font, see  https://theme-hope.vuejs.press/cookbook/customize/font.html#font-library
+    ["link", { rel: "preconnect", href: "https://fonts.googleapis.com" }],
+    [
+      "link",
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
+    ],
+    [
+      "link",
+      {
+        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap",
+        rel: "stylesheet",
+      },
+    ],
+  ],
+
   bundler: viteBundler({
     viteOptions: {
       css: {
