@@ -1,7 +1,7 @@
 ---
 title: 【二次元冒险记·III】i83 Fan Meeting
 icon: material-symbols:article
-date: 2023-11-05
+date: 2023-11-12
 category:
   - 随想
 tag:
