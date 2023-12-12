@@ -9,4 +9,6 @@ sticky: true
 
 仍在自闭中。
 
+<!-- more -->
+
 ![V我50](/assets/images/buy_me_a_figure.png)

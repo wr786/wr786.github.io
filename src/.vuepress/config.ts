@@ -16,10 +16,18 @@ export default defineUserConfig({
     [
       "link",
       {
-        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap",
+        // href: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css?family=Noto+Serif+SC",
         rel: "stylesheet",
       },
     ],
+    [
+      "meta",
+      {
+        name: "google-site-verification",
+        content: "gfgp2xIoIKS2k4g-qRelpJ49JlXBs78W1GzRzshSWIw"
+      }
+    ]
   ],
 
   bundler: viteBundler({
