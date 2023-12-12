@@ -8,7 +8,7 @@ heroText: wr786的空间
 heroFullScreen: true
 sidebar: false
 tagline: 日々進化中
-bgImage: https://images2.alphacoders.com/947/947089.jpg
+bgImage: https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?q=80&w=2970&auto=format&fit=crop
 projects:
   - icon: https://github.com/TeddyHuang-00.png?size=256
     name: TeddyHuang-00
