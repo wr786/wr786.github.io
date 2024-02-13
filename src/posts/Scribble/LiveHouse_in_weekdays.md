@@ -13,7 +13,7 @@ star: false
 
 虽说在[上一篇LiveHouse repo](./LiveHouseExperience.md)中，我提到「下次如果不是特别想听的人的话，还是不来LiveHouse了」，但是实际上还是忍不住听，所以我又赶场了两个LiveHouse。比较特别的是，这两次都是工作日的场子，所以这也是我的「平日赶场」记。
 
-![770akr](/assets/images/nanaokari.jpeg)
+![770akr](/assets/images/nanaoakari.jpeg)
 
 <!-- more -->
 

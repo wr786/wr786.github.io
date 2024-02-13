@@ -43,7 +43,7 @@ export default defineUserConfig({
   locales: {
     "/": {
       lang: "zh-CN",
-      title: "wr786的空间",
+      title: "Kowa7的空间",
       description: "日々進化中",
     },
   },
