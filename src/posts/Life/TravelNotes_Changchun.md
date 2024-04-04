@@ -1,5 +1,5 @@
 ---
-title: 游记｜ 长春
+title: 游记｜长春
 icon: material-symbols:article
 date: 2024-03-23
 category:
