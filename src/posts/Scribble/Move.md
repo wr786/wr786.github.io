@@ -6,6 +6,7 @@ category:
   - 随想
 tag:
   - 起居
+  - 攻略
   - 随笔
 sticky: false
 star: true

@@ -9,7 +9,7 @@ tag:
   - 随笔
   - 二次元冒险记
 sticky: false
-star: true
+star: false
 ---
 
 ![✝️昇天✝️·V2](/assets/images/YingHuoChong05th.jpeg)

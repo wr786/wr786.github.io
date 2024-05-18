@@ -5,6 +5,7 @@ date: 2023-10-07
 category:
   - 随想
 tag:
+  - 攻略
   - 随笔
 sticky: false
 star: true

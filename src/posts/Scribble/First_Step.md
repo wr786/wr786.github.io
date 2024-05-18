@@ -9,7 +9,7 @@ tag:
   - 随笔
   - 二次元冒险记
 sticky: false
-star: true
+star: false
 ---
 
 我是一个自闭的社恐人。
