@@ -16,7 +16,7 @@ export default defineUserConfig({
     [
       "link",
       {
-        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@786;500;700&display=swap",
         // href: "https://fonts.googleapis.com/css?family=Noto+Serif+SC",
         rel: "stylesheet",
       },
@@ -43,7 +43,7 @@ export default defineUserConfig({
   locales: {
     "/": {
       lang: "zh-CN",
-      title: "Kowa7的空间",
+      title: "KOWA7的空间",
       description: "日々進化中",
     },
   },

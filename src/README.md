@@ -4,7 +4,7 @@ layout: BlogHome
 icon: home
 title: 主页
 heroImage: /computer.svg
-heroText: Kowa7的空间
+heroText: KOWA7的空间
 heroFullScreen: true
 sidebar: false
 tagline: 日々進化中

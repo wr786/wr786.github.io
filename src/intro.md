@@ -3,7 +3,7 @@ icon: info
 star: true
 sticky: true
 ---
-# 你好👋，我是 Kowa7
+# 你好👋，我是 KOWA7
 
 INFP，喜欢宅又喜欢出去。
 
