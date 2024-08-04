@@ -31,6 +31,10 @@ export default hopeTheme({
         "https://bgm.tv/user/wr786", 
         path.resolve(__dirname, "public/bangumi.svg"),
       ],
+      EventerNote: [
+        "https://www.eventernote.com/users/KOWA7/events", 
+        path.resolve(__dirname, "public/eventernote.svg"),
+      ],
     },
   },
 
