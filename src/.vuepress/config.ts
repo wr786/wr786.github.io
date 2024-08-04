@@ -16,7 +16,7 @@ export default defineUserConfig({
     [
       "link",
       {
-        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@786;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500",
         // href: "https://fonts.googleapis.com/css?family=Noto+Serif+SC",
         rel: "stylesheet",
       },
