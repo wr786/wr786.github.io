@@ -3,12 +3,13 @@ home: true
 layout: BlogHome
 icon: home
 title: 主页
-heroImage: /computer.svg
-heroText: KOWA7的空间
-heroFullScreen: true
+# heroImage: /computer.svg
+# heroText: KOWA7的空间
+# heroFullScreen: false
+hero: false
 sidebar: false
 tagline: 日々進化中
-bgImage: https://static.simpledesktops.com/uploads/desktops/2016/12/05/Untitled-1-03-01.png
+# bgImage: https://static.simpledesktops.com/uploads/desktops/2016/12/05/Untitled-1-03-01.png
 projects:
   - icon: https://github.com/TeddyHuang-00.png?size=256
     name: TeddyHuang-00

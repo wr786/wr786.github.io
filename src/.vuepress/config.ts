@@ -16,7 +16,14 @@ export default defineUserConfig({
     [
       "link",
       {
-        href: "https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=Recursive:wght,CASL,MONO@300..1000,1,1&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Recursive:wght,CASL,MONO@300..1000,1,1&display=swap",
+        rel: "stylesheet",
+      },
+    ],
+    [
+      "link",
+      {
+        href: "https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css",
         rel: "stylesheet",
       },
     ],

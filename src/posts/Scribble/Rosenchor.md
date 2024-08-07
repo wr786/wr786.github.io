@@ -1,5 +1,5 @@
 ---
-title: 【二次元冒险记·Ⅷ】日本与国内现地对比 ～ 「Rosenchor」
+title: 【二次元冒险记·VIII】日本与国内现地对比 ～ 「Rosenchor」
 icon: material-symbols:article
 date: 2024-08-04
 category:
