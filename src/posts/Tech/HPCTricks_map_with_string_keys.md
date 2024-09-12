@@ -3,7 +3,7 @@ title: 【高性能C++奇技淫巧】当你要用很多短字符串当字典key
 icon: material-symbols:article
 date: 2023-10-07
 category:
-  - 计算机
+  - 开发杂谈
 tag:
   - 后端
   - 高性能

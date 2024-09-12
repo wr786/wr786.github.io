@@ -3,7 +3,7 @@ title: Multicast & IGMP
 icon: material-symbols:article
 date: 2023-11-03
 category:
-  - 计算机
+  - 开发杂谈
 tag:
   - 网络
 sticky: false

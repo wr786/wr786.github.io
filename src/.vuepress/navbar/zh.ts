@@ -8,12 +8,12 @@ export const zhNavbar = navbar([
     prefix: "/posts/",
     children: [
       {
-        text: "记录",
+        text: "存在证明",
         icon: "edit",
         link: "Life/",
       },
       {
-        text: "技术",
+        text: "开发杂谈",
         icon: "code",
         link: "Tech/",
       },

@@ -23,8 +23,8 @@ export default hopeTheme({
 
   blog: {
     medias: {
-      BiliBili: "https://space.bilibili.com/1898891",
-      Email: "mailto:wr786@pku.edu.cn",
+      // BiliBili: "https://space.bilibili.com/1898891",
+      // Email: "mailto:wr786@pku.edu.cn",
       GitHub: "https://github.com/wr786",
       Steam: "https://steamcommunity.com/id/wr786",
       Bangumi: [

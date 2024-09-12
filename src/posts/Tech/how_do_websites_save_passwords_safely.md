@@ -3,7 +3,7 @@ title: 网站如何安全地存储和传输用户密码
 icon: material-symbols:article
 date: 2019-12-28
 category:
-  - 计算机
+  - 开发杂谈
 tag:
   - 后端
   - 密码学

@@ -3,7 +3,7 @@ title: 平摊分析 Amortized Analysis
 icon: material-symbols:article
 date: 2021-05-07
 category:
-  - 计算机
+  - 开发杂谈
 tag:
   - 算法
 sticky: false
