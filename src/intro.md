@@ -3,7 +3,7 @@ icon: info
 star: true
 sticky: true
 ---
-# 你好👋，我是 KOWA7
+# 你好👋，我是 wr786
 
 INFP，喜欢宅又喜欢出去。
 
