@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>开发杂谈 on wr786</title><link>https://wr786.github.io/categories/%E5%BC%80%E5%8F%91%E6%9D%82%E8%B0%88/</link><description>Recent content in 开发杂谈 on wr786</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://wr786.github.io/categories/%E5%BC%80%E5%8F%91%E6%9D%82%E8%B0%88/index.xml" rel="self" type="application/rss+xml"/><item><title>「田忌赛马」导致的统计偏差趣事一则</title><link>https://wr786.github.io/p/tian-ji-sai-ma/</link><pubDate>Thu, 12 Sep 2024 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/tian-ji-sai-ma/</guid><description>&lt;img src="https://wr786.github.io/p/tian-ji-sai-ma/cover.jpg" alt="Featured image of post 「田忌赛马」导致的统计偏差趣事一则" />&lt;p>我们应该在小学还是初中应该就知道了「田忌赛马」的故事，今天发生的事与这有关。&lt;/p>
+&lt;p>同事重构了一段代码，想要观察与重构前相比的性能变化，于是他写了这样一段逻辑：&lt;/p>
+&lt;blockquote>
+&lt;p>用旧版和新版跑一段相同的输入，然后输出出处理每条数据的耗时。&lt;/p>
+&lt;p>将所有耗时放在一个数组里，排序后输出统计信息（比如平均数、各百分位数）&lt;/p>&lt;/blockquote>
+&lt;p>然后他惊人地发现，在一个百分位数之前，是旧版的速度更快；而在这个百分位数之后，都是新版的速度更快。就平均数而言，也是新版的更快。&lt;/p>
+&lt;p>从代码上分析，理应新版是更快的。那么究竟新版和旧版谁更快呢？为什么会有好几个百分位数都是旧版更快呢？&lt;/p>
+&lt;p>他百思不得其解，觉得这似乎是一种灵异事件。于是求助于我。&lt;/p>
+&lt;p>我一看，也觉得十分奇怪。了解了他的逻辑之后，建议他不要分别统计两组耗时的统计信息，而是不要排序（也就是逐条对应，这样每对耗时都是对应同一个输入情况的），直接用新版减去旧版，然后对这个从旧版到新版耗时的变化进行统计。&lt;/p>
+&lt;p>这个时候结果就很明显了：只有最大的百分位是正数，其他都是负数。那么我们很明显就知道了具体的情况：新版整体上都比旧版快，但是会有一些 jitter。&lt;/p>
+&lt;p>那么在知道了这个的情况下，再回头看看刚刚的「灵异事件」，就能发现这本质上是一种「田忌赛马」了。不妨让我来举个例子。&lt;/p>
+&lt;p>为了简化讨论，我们不妨设排序后旧版耗时是 &lt;code>[2, 4, 6, 8, 10]&lt;/code>，新版从代码上说理应比旧版快，理想情况是 &lt;code>[1, 3, 5, 7, 9]&lt;/code>，这样进行统计，结论显然是新版处理所有输入耗时都更短。&lt;/p>
+&lt;p>但是，如果我们出现了 jitter，比如这个 &lt;code>1&lt;/code> 变成了 &lt;code>10&lt;/code>，那么我们排序后新版耗时就是 &lt;code>[3, 5, 7, 9, 10]&lt;/code>。这样再进行统计的话，我们就能得到意外的结论：新版处理所有输入耗时都更长。但是实际的情况呢？是对于大部分情况都比旧版要快，只是偶尔有 jitter 而已。&lt;/p>
+&lt;p>因为对应关系被打乱了，而导致了完全相反的结论！这完全就是「田忌赛马」的味道！&lt;/p>
+&lt;p>事情的后续就是同事知道了 jitter 的存在，从而进行了相应的修复，于是新版的性能稳定比旧版表现好。&lt;/p>
+&lt;p>可喜可贺。&lt;/p></description></item><item><title>Multicast &amp; IGMP</title><link>https://wr786.github.io/p/multicast_and_igmp/</link><pubDate>Fri, 03 Nov 2023 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/multicast_and_igmp/</guid><description>&lt;p>IGMP 是一个网络层协议，用于在 IPv4 的网络上设置多播。&lt;/p>
+&lt;p>具体来说，IGMP 允许设备加入一个多播组。&lt;/p>
+&lt;h2 id="什么是多播multicast">什么是多播（Multicast）？
+&lt;/h2>&lt;p>多播使得一个应用可以仅仅发送一个数据包，就能让网络中的一组 host 都收到，就像群发邮件一样。&lt;/p>
+&lt;p>多播通过在多个设备之间共享 IP 地址来运作。指向该 IP 地址的任何网络流量都将到达共享该 IP 地址的所有设备。&lt;/p>
+&lt;p>因为多播是一对多的，所以只能用类似 SOCK_DGRAM 的 socket，而不能用 SOCK_STREAM。&lt;/p>
+&lt;h2 id="igmp-如何运作">IGMP 如何运作？
+&lt;/h2>&lt;p>连接到网络的计算机和其他设备在想要加入多播组时使用 IGMP。支持 IGMP 的路由器侦听来自设备的 IGMP 传输，以确定哪些设备属于哪些多播组。&lt;/p>
+&lt;p>IGMP 使用为多播预留的 IP 地址。多播 IP 地址在 224.0.0.0 和 239.255.255.255 之间的范围内（即D类网段）。并被分为&lt;/p>
+&lt;ul>
+&lt;li>局部多播地址：在 224.0.0.0～224.0.0.255 之间，这是为路由协议和其他用途保留的地址，路由器并不转发属于此范围的 IP 包。&lt;/li>
+&lt;li>预留多播地址：在 224.0.1.0～238.255.255.255 之间，可用于全球范围（如 Internet ）或网络协议。&lt;/li>
+&lt;li>管理权限多播地址：在 239.0.0.0～239.255.255.255 之间，可供组织内部使用，类似于私有IP地址，不能用于 Internet，可限制多播范围。&lt;/li>
+&lt;/ul>
+&lt;p>每个多播组共享其中一个 IP 地址。当路由器接收到一系列指向该共享 IP 地址的数据包时，它将复制这些数据包，将副本发送给多播组的所有成员。
+IGMP 多播组可以随时更改。设备可以在任何时候发送 IGMP “加入组”或“离开组”消息。IGMP 不限成员数量和位置。&lt;/p>
+&lt;h2 id="使用">使用
+&lt;/h2>&lt;h3 id="命令行">命令行
+&lt;/h3>&lt;p>&lt;strong>加入指定多播组&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo ip addr add 233.54.12.234/32 dev eth1 autojoin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">socat STDIO UDP4-RECV:22001,ip-add-membership&lt;span class="o">=&lt;/span>233.54.12.234:eth1 &amp;gt; /dev/null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>查看加入了哪些多播组&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">netstat -gn
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="程序">程序
+&lt;/h3>&lt;p>setsockopt()参数&lt;/p>
+&lt;ol>
+&lt;li>IP_ADD_MEMBERSHIP: 加入指定多播组&lt;/li>
+&lt;li>IP_DROP_MEMBERSHIP: 退出指定多播组&lt;/li>
+&lt;li>IP_MULTICAST_IF: 设置将要发出multicast包的interface&lt;/li>
+&lt;li>IP_MULTICAST_TTL: 设置发出的multicast包的TTL，默认TTL为1。&lt;/li>
+&lt;li>IP_MULTICAST_LOOP: 设置是否要将发出的multicast包也发给发送者，如果发送者也是那个多播组的一员。&lt;/li>
+&lt;/ol>
+&lt;p>具体使用可见：https://tldp.org/HOWTO/Multicast-HOWTO-6.html&lt;/p>
+&lt;p>一般要写一个收/发multicast的程序，需要：&lt;/p>
+&lt;ol>
+&lt;li>建立一个socket。&lt;/li>
+&lt;li>设置多播的参数，例如超时时间TTL、本地回环许可LOOP等。（纯接收的话不用设置）&lt;/li>
+&lt;li>加入多播组。&lt;/li>
+&lt;li>发送或接收数据。&lt;/li>
+&lt;li>退出多播组。&lt;/li>
+&lt;/ol>
+&lt;h2 id="multicast-without-igmp">Multicast Without IGMP
+&lt;/h2>&lt;p>在实际使用中，我们发现，在有些机器上，即使我们没有加入多播组，也能收到多播信息。&lt;/p>
+&lt;p>这是由于接收者和发送源在&lt;strong>同一内网&lt;/strong>下，所以不需要加入多播组就能收到multicast。&lt;/p>
+&lt;h2 id="参考">参考
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.cloudflare.com/zh-cn/learning/network-layer/what-is-igmp/" target="_blank" rel="noopener"
+>https://www.cloudflare.com/zh-cn/learning/network-layer/what-is-igmp/&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.tenouk.com/Module41c.html" target="_blank" rel="noopener"
+>https://www.tenouk.com/Module41c.html&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://unix.stackexchange.com/questions/140384/creating-multicast-join-for-tcpdump-captures" target="_blank" rel="noopener"
+>https://unix.stackexchange.com/questions/140384/creating-multicast-join-for-tcpdump-captures&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://superuser.com/questions/425665/multicast-streaming-without-igmp" target="_blank" rel="noopener"
+>https://superuser.com/questions/425665/multicast-streaming-without-igmp&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>【高性能C++奇技淫巧】当你要用很多短字符串当字典key</title><link>https://wr786.github.io/p/hpctricks_map_with_string_keys/</link><pubDate>Sat, 07 Oct 2023 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/hpctricks_map_with_string_keys/</guid><description>&lt;img src="https://wr786.github.io/p/hpctricks_map_with_string_keys/cover.png" alt="Featured image of post 【高性能C++奇技淫巧】当你要用很多短字符串当字典key" />&lt;p>如果你有这样的情景：&lt;/p>
+&lt;ul>
+&lt;li>需要创建一个字典，而字典的key都是很短（长度不超过8）的字符串。&lt;/li>
+&lt;li>同时你又需要追求高性能，希望能达到纳秒级的时延优化。&lt;/li>
+&lt;/ul>
+&lt;p>那么你会怎么做呢？&lt;/p>
+&lt;!-- more -->
+&lt;p>很常见的做法是：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">unordered_map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dict&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>但是其实，我们可以针对这个场合做出神奇的优化：&lt;/p>
+&lt;p>众所周知，字符串是由字符组成的，而每个字符占1个字节，也就是说相当于一个&lt;code>int8_t&lt;/code>或者&lt;code>uint8_t&lt;/code>。
+而如果key都不超过8，那么$8 \times 8 = 64$，我们完全可以将其convert为一个&lt;code>uint64_t&lt;/code>。即&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">unordered_map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">uint64_t&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dict&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">char&lt;/span> &lt;span class="n">str&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">];&lt;/span> &lt;span class="c1">// strlen(str) &amp;lt;= 8
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">dict&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">insert&lt;/span>&lt;span class="p">({&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">reintepret_cast&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">uint64_t&lt;/span>&lt;span class="o">*&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">str&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这么一看你就懂了吧！无须多言。最后我们上个效率对比吧，看看能有多大的提升：&lt;/p>
+&lt;p>&lt;img src="https://wr786.github.io/p/hpctricks_map_with_string_keys/cover.png"
+width="1518"
+height="802"
+srcset="https://wr786.github.io/p/hpctricks_map_with_string_keys/cover_hu_d82f2602f559610c.png 480w, https://wr786.github.io/p/hpctricks_map_with_string_keys/cover_hu_a30eb7eacf9c819d.png 1024w"
+loading="lazy"
+alt="可以看到，find操作是2.6倍的快"
+class="gallery-image"
+data-flex-grow="189"
+data-flex-basis="454px"
+>&lt;/p>
+&lt;p>你也可以&lt;a class="link" href="https://quick-bench.com/q/yiUMubp7mDrmwQh4zJVML8q2Pw4" target="_blank" rel="noopener"
+>在此在线观看这个benchmark&lt;/a>。&lt;/p>
+&lt;p>此外，你也可以考虑采取其它实现方式的map，比如这里有位大神总结的&lt;a class="link" href="https://martin.ankerl.com/2022/08/27/hashmap-bench-01/" target="_blank" rel="noopener"
+>Comprehensive C++ Hashmap Benchmarks 2022&lt;/a>，根据你需要的场景，选择更合适的map，也能继续压低时延。&lt;/p></description></item><item><title>平摊分析 Amortized Analysis</title><link>https://wr786.github.io/p/amortized-analysis/</link><pubDate>Fri, 07 May 2021 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/amortized-analysis/</guid><description>&lt;h2 id="为什么要平摊分析">为什么要平摊分析？
+&lt;/h2>&lt;p>算法往往是会对内存中的数据进行修改的，而同一个算法的多次执行，就会通过对数据的修改而互相影响。&lt;/p>
+&lt;p>为了解决计算上的困难，以及&lt;strong>操作之间的不独立&lt;/strong>而导致的估算上界过松，我们就需要用到平摊分析。&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="平摊分析的三种方法">平摊分析的三种方法
+&lt;/h2>&lt;p>平摊分析总共有三种方法，概括起来就是：&lt;/p>
+&lt;ul>
+&lt;li>聚集分析：n次总代价 / n&lt;/li>
+&lt;li>记账法：把之后要做的操作的代价提前考虑&lt;/li>
+&lt;li>势能法：用势能释放来支付未来操作的代价&lt;/li>
+&lt;/ul>
+&lt;p>其中势能法是我们需要重点掌握的方法。&lt;/p>
+&lt;h3 id="聚集分析-aggregate-method">聚集分析 &lt;em>Aggregate Method&lt;/em>
+&lt;/h3>&lt;blockquote>
+&lt;p>平摊代价 = n次操作总代价 / n&lt;/p>&lt;/blockquote>
+&lt;p>通过总运行时间求平均得到平摊时间，不需要对操作序列的概率分布做假设。&lt;/p>
+&lt;h4 id="栈s上的三种操作">栈S上的三种操作
+&lt;/h4>&lt;p>比如课堂例题，栈上的三种操作(PUSH、POP、MULTIPOP)，我们可以得到一个总时间上界$O(n^2)$，但它并不紧。&lt;/p>
+&lt;p>在栈上，所有POP和MULTIPOP弹出的对象数不会多余PUSH入栈的对象数。&lt;/p>
+&lt;p>因此，若进行n次操作，PUSH的总规模是$O(n)$，这也就使得POP和MULTIPOP的总规模也只能是$O(n)$。那么n次操作的总代价为$O(n)$，我们计算得到平摊代价=$\frac{O(n)}{n} = O(1)$&lt;/p>
+&lt;h4 id="二进制计数器">二进制计数器
+&lt;/h4>&lt;p>观察INCREMENT操作序列&lt;/p>
+&lt;ul>
+&lt;li>每次操作，$A[0]$都反转&lt;/li>
+&lt;li>每两次操作，$A[1]$反转&lt;/li>
+&lt;li>每$2^i$次操作，$A[i]$反转&lt;/li>
+&lt;/ul>
+$$
+\sum_{i=0}^{\lfloor log(n) \rfloor}{\lfloor \frac{n}{2^i} \rfloor} &lt; n\sum_{i=0}^{\infin}\frac{1}{2^i} = 2n
+$$&lt;p>
+那么总时间为$O(n)$，每个操作平坦时间为$O(n) / n = O(1)$&lt;/p>
+&lt;h3 id="记账法-accounting-method">记账法 &lt;em>Accounting Method&lt;/em>
+&lt;/h3>&lt;p>不必算出每一步实际代价，我们用一个虚构的代价，满足对任意k，前k步满足：&lt;/p>
+&lt;blockquote>
+&lt;p>$第k步存款 = \sum_{i=1}^{k}平摊代价_i - \sum_{i=1}^k实际代价_i \geq 0$&lt;/p>&lt;/blockquote>
+&lt;p>如何设计平摊代价？提前考虑之后的代价。&lt;/p>
+&lt;h4 id="栈s上的三种操作-1">栈S上的三种操作
+&lt;/h4>&lt;p>仍然，在栈上，所有POP和MULTIPOP弹出的对象数不会多余PUSH入栈的对象数。&lt;/p>
+&lt;p>那么我们如何设计平摊代价？答案是把POP类操作的帐记在PUSH头上。&lt;/p>
+&lt;p>每次PUSH操作，我们对入栈的对象收费2元，1元用于支付实际费用，另1元存起来，为了支付这个对象以后可能发生的POP操作。&lt;/p>
+&lt;p>由于栈中的对象数不可能为负，而每个对象被POP的次数不会多于它被PUSH的次数，所以存款不会小于0。&lt;/p>
+&lt;p>那么，我们可以对POP、MULTIPOP收费0元。因为PUSH时已经预先付过它们的费用了。&lt;/p>
+&lt;p>进行n次操作，PUSH总共记账$O(2n)$，POP和MULTIPOP总共记账$0$，那么总代价也就是$O(2n) = O(n)$。&lt;/p>
+&lt;p>平摊时间为$O(n)/n = O(1)$。&lt;/p>
+&lt;h4 id="二进制计数器-1">二进制计数器
+&lt;/h4>&lt;p>注意到，每次INCREMENT只会把一个0反转为1，但可能把多个1反转为0.&lt;/p>
+&lt;p>我们每次INCREMENT收费2元，其中1元用来支付将一个0反转为1的实际费用，另1元存在这个反转出来的1上，为了支付以后可能发生的反转为0；那么由于之前的存款，每个被反转为0的1上原本都有1元存款，也就支付了这次INCREMENT的费用。&lt;/p>
+&lt;p>而1的个数总是大于等于0的，所以存款不可能为负。&lt;/p>
+&lt;h3 id="势能法-potential-method">势能法 &lt;em>Potential Method&lt;/em>
+&lt;/h3>&lt;p>利用数据结构$D$的函数$\Phi$定义平摊代价：&lt;/p>
+&lt;blockquote>
+&lt;p>$平摊代价_i = 实际代价_i + \Phi(D_i) - \Phi(D_{i-1})$&lt;/p>&lt;/blockquote>
+&lt;p>其中，对于任意$i$，都要满足$\Phi(D_i) \geq \Phi(D_0)$，这样我们就能保证我们给出了实际代价的一个上界。&lt;/p>
+&lt;p>势能法与记账法有些类似，但是记账法是将存款存储在某些特定的对象之上，而势能法的势能是体现在整个数据结构之上的。&lt;/p>
+&lt;h4 id="栈s上的三种操作-2">栈S上的三种操作
+&lt;/h4>&lt;p>仍然是栈的三操作，我们定义势函数为栈中对象的个数：&lt;/p>
+&lt;ul>
+&lt;li>开始时，栈是空的，所以有$\Phi(D_0) = 0$.&lt;/li>
+&lt;li>栈中对象数始终非负，所以满足$\Phi(D_i) \geq 0 = \Phi(D_0)$.&lt;/li>
+&lt;/ul>
+&lt;p>那么我们就能保证我们给出了实际代价的一个上界。&lt;/p>
+&lt;p>那么对于作用在一个包含$s$个对象的栈上的第$i$个操作，&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>PUSH&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = s+1 - s = 1$&lt;/p>
+&lt;p>平摊代价：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 1+1=2$&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>MULTIPOP(S, k)&lt;/p>
+&lt;p>实际代价：$c_i = min(s, k)$&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = -min(s, k)$&lt;/p>
+&lt;p>平摊代价：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 0$&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>POP&lt;/p>
+&lt;p>同理MULTIPOP，平摊代价也是0.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>我们分析出三种栈操作的平摊代价都是$O(1)$，那么n次操作的总平摊代价就是$O(n)$。&lt;/p>
+&lt;p>而这是总实际代价的一个上界。所以n次操作的最坏时间复杂度为$O(n)$。&lt;/p>
+&lt;h4 id="二进制计数器-2">二进制计数器
+&lt;/h4>&lt;p>我们定义势函数为数组$A[0&amp;hellip;k-1]$中$1$的个数。&lt;/p>
+&lt;p>设第$i$次INCREMENT操作将$t_i$个1反转为0，那么实际代价为$t_i+1$&lt;/p>
+&lt;p>设第$i$次操作后，数组中1的个数为$b_i$，那么&lt;/p>
+&lt;ul>
+&lt;li>如果$b_i = 0$，则第$i$次操作反转了$k$个1，那么$b_{i-1} = t_i = k$&lt;/li>
+&lt;li>如果$b_i &amp;gt; 0$，那么有$b_i = b_{i-1} - t_i + 1$&lt;/li>
+&lt;li>这两种情形都满足：$b_i \leq b_{i-1} - t_i + 1$&lt;/li>
+&lt;/ul>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) \leq (b_{i-1} - t_i + 1) - b_{i-1} = 1 - t_i$&lt;/p>
+&lt;p>平摊代价：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = (t_i + 1) + (1- t_i) = 2$&lt;/p>
+&lt;h2 id="补充习题">补充习题
+&lt;/h2>&lt;h3 id="insert--remove_bottom_half">INSERT &amp;amp; REMOVE_BOTTOM_HALF
+&lt;/h3>&lt;p>&lt;strong>请设计一个数据结构，能够维护一组n个不同整数组成的集合S，能够支持以下两种操作：&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>INSERT(x, S)：将x加入S。&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>REMOVE_BOTTOM_HALF(S)：从S移除最小的$\lceil \frac{n}{2} \rceil$个整数。&lt;/strong>
+&lt;strong>描述你的算法并给出最坏情况下两个操作的时间复杂度。采用势能法进行平摊分析，得到两种操作的平摊时间，选择合适的分析策略，令INSERT(x, S)的平摊时间为$O(1)$，REMOVE_BOTTOM_HALF(S)的平摊时间为$0$.&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>我们用一个无序的数组（或者，动态表）来存放所有的整数。&lt;/p>
+&lt;p>定义势函数$\Phi(D_i) = k|D_i| = kn$，那么&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>REMOVE_BOTTOM_HALF(S):&lt;/p>
+&lt;blockquote>
+&lt;p>注意到，这步操作我们可以利用算法$Select(n, k)$选出中位数，然后再扫描一遍数组，将保留下来的数字复制到一个新的数组中，然后令S指向这个新的数组头，在实际时间2n内完成。&lt;/p>
+&lt;p>但是，为了严谨起见，我们设它是在实际时间$cn$内完成的。其中$c$为大于1的常数。&lt;/p>&lt;/blockquote>
+&lt;p>我们令$k = 2c$，即$\Phi(D_i) = 2c|D_i| = 2cn \geq 0$，那么&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = 2c\lfloor \frac{n}{2} \rfloor - 2cn$&lt;/p>
+$$
+\begin{align}
+a_i &amp;= c_i + \Phi(D_i) - \Phi(D_{i-1}) \\
+&amp;= cn + 2c\lfloor \frac{n}{2} \rfloor - 2cn \\
+&amp;= 2c\lfloor\frac{n}{2}\rfloor - cn \\
+&amp;\leq 0
+\end{align}
+$$&lt;p>
+所以平摊时间为0.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>INSERT(x, S)：&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = 2cn - 2c(n-1) = 2c$&lt;/p>
+&lt;p>平摊时间：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 1 + 2c = O(1)$&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>显然，最坏情况下，INSERT操作的时间复杂度为$O(1)$，而根据上述分析，REMOVE_BOTTOM_HALF的最坏时间复杂度为$O(n)$。它们的平摊代价根据上述分析，也分别为$O(1)$与$0$。&lt;/p>
+&lt;h3 id="-mtfmove-to-front-链表访问">&lt;strong>[竞争分析]&lt;/strong> MTF(Move-to-Front) 链表访问
+&lt;/h3>&lt;h4 id="mtf算法">MTF算法
+&lt;/h4>&lt;p>考虑一个问题：&lt;/p>
+&lt;p>我们有一个线性表（比如单链表），在它上面：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>我们访问第$i$个元素的访问代价为$i$&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>交换两个相邻元素的代价为某个固定常数值&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>我们的目标是：通过“交换”调整原链表，使得n次访问的总访问代价最小。&lt;/p>
+&lt;p>如果访问序列是已知的，那么我们当然可以针对这个访问序列设计一个最优的调整策略。
+但是，如果我们并不能提前知道访问序列，我们可以考虑采取MTF方式来调整链表。&lt;/p>
+&lt;p>MTF利用了一个事实：对于现实中的问题，比如分页，如果第$i$个元素在时间$t$被访问，那么它比较有可能在时间$t$的不久后再次被访问。&lt;em>（访问局部性 in ICS）&lt;/em>&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>MTF算法&lt;/strong>：
+当第$i$个元素被访问，我们将它移动到线性表的最前面(Move-to-Front)。
+而这个“移动”操作是通过$i-1$次交换完成的。
+所以，当第$i$个元素被访问，总代价为$i+ i-1 = 2i-1$&lt;/p>&lt;/blockquote>
+&lt;p>我们可以利用平摊分析证明：&lt;/p>
+&lt;blockquote>
+&lt;p>MTF不会比任何其他调整策略（包括最优策略）效率的4倍更差，甚至不需要假设存在访问局部性。&lt;/p>&lt;/blockquote>
+&lt;h4 id="定义势函数">定义势函数
+&lt;/h4>&lt;p>设任意一个调整策略为算法A。我们定义在时刻$t$时的势函数为MTF作用下的链表相对于A作用下的链表的逆序对数的2倍。&lt;/p>
+&lt;p>比如，在时刻$t$时，MTF的链表为$(a, b, c, e, d)$，A的链表为$(a, b, c, d, e)$，那么此时的势函数结果就是2。&lt;/p>
+&lt;p>由于初始时，两个算法下的链表都是初始链表，相对逆序对数为0，所以$\Phi(0)=0$。
+而在任意时刻下，相对逆序对数都不可能为负值，所以$\Phi(t) \geq \Phi(0)$。
+那么我们就能保证我们能给出实际代价的一个上界。&lt;/p>
+&lt;h4 id="计算平摊代价">计算平摊代价
+&lt;/h4>&lt;p>现在，我们考虑访问一个元素$x$。设$x$在MTF的链表里在第$k$个位置，在A的链表里在第$i$个位置。我们先假设A并不会交换其他元素。&lt;/p>
+&lt;p>在MTF算法中，访问元素$x$并交换到前面的总代价为$2k-1$。
+在算法A中，访问元素$x$的代价为$i$，设其进行其他操作的代价为$Q$，那么总代价为$i+Q \geq i$。&lt;/p>
+&lt;p>因为MTF算法将$x$移动到了表前面，而这个$x$之前在MTF的链表中前面有$k-1$个元素，在A的链表中之前有$i-1$个元素，所以它最多增加$\min{k-1, i-1}$个新相对逆序对。与此同时，它最少减少了$k-1-\min{k-1, i-1}$个旧相对逆序对。&lt;/p>
+&lt;p>而由势函数的定义，势的变化最多为2倍的两者之差，即$4\min{k-1,i-1}-2(k-1)$&lt;/p>
+$$
+\begin{align}
+c
+&amp;= a + \Delta\Phi \\
+&amp;\leq (2k-1) + 4\min\{k-1, i-1\}-2(k-1) \\
+&amp;\leq 4\min\{k-1, i-1\} + 1 \\
+&amp;\leq 4i \\
+&amp;\leq 4(i+Q)
+\end{align}
+$$&lt;p>
+也就得出了MTF的平摊代价不会比A的平摊代价的4倍更高。&lt;/p>
+&lt;h4 id="思考如果算法a会交换其他元素怎么办">思考：如果算法A会交换其他元素怎么办？
+&lt;/h4>&lt;p>不妨假设A交换了2个相邻元素。
+这并不会影响到MTF的实际代价。这会增加$2$给新势能。
+但同时，它也增加了算法A的$Q$部分$1$。
+那么，MTF的均摊代价虽然增加了$2$，但是它的界限却增加了$4$，结论仍然成立。&lt;/p>
+&lt;p>所以，无论A怎么交换其他元素，都不会影响我们的结论。&lt;/p>
+&lt;h3 id="更多平摊分析经典问题">更多平摊分析经典问题：
+&lt;/h3>&lt;ul>
+&lt;li>Splay树&lt;/li>
+&lt;li>红黑树&lt;/li>
+&lt;li>斐波那契堆&lt;/li>
+&lt;li>并查集&lt;/li>
+&lt;li>最大流 (Push-Relabel 预流推进算法)&lt;/li>
+&lt;li>&lt;strong>动态表&lt;/strong> / 哈希表&lt;/li>
+&lt;li>替罪羊树&lt;/li>
+&lt;/ul></description></item><item><title>网站如何安全地存储和传输用户密码</title><link>https://wr786.github.io/p/how_do_websites_save_passwords_safely/</link><pubDate>Sat, 28 Dec 2019 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/how_do_websites_save_passwords_safely/</guid><description>&lt;h1 id="不同角度对安全的定义">不同角度对安全的定义
+&lt;/h1>&lt;p>&lt;strong>密码系统安全性应满足的条件&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>系统在理论上是不会被破译的，也不能在实践中被破译。&lt;/li>
+&lt;li>系统的机密性不依赖于加密/解密算法和系统的加密，而只取决于密钥的机密性。&lt;/li>
+&lt;li>易于添加/解密操作、在软件/硬件中快速且易于实现。&lt;/li>
+&lt;li>加密/解密算法对密钥空间的全部元素均可用。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>测量密码系统安全性的基本标准&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>计算安全&lt;/strong>：解密加密算法的计算能力与计算时间在实际条件下不可用。&lt;/li>
+&lt;li>&lt;strong>安全证明&lt;/strong>：密码系统的解密依赖于对数学问题深入研究的解决方案。理论上保证安全。&lt;/li>
+&lt;li>&lt;strong>无条件的安全&lt;/strong>：攻击者不能在用没有限制计算能力与时间的基础上破译加密算法。极限状态下的安全。&lt;/li>
+&lt;/ol>
+&lt;p>除了一次性加密算法，理论上还没有绝对安全的密码系统。在实际应用中，只要能够证明所采用的密码系统是计算安全的，就有理由相信加密算法是安全的。[1]&lt;/p>
+&lt;h1 id="安全地存储密码">安全地存储密码
+&lt;/h1>&lt;h3 id="委托给可信任的第三方存储openid技术">委托给可信任的第三方存储——&lt;strong>OpenID&lt;/strong>技术
+&lt;/h3>&lt;p>OpenID的理念是用第三方来完成用户验证。&lt;/p>
+&lt;p>目前国外的网站如谷歌、雅虎等，国内的如腾讯等都已经提供OpenID服务。&lt;/p>
+&lt;p>如果我们开发一个网站并选择谷歌的OpenID服务，那么用户就可以用Gmail的账号和密码登录，接下来用户认证的事情将由谷歌完成。&lt;/p>
+&lt;p>优点：&lt;/p>
+&lt;ul>
+&lt;li>没必要自己存储用户名和密码，也就没必要考虑存储密码的安全性问题，从而减少开发的成本。&lt;/li>
+&lt;li>用户不用在网站上注册新的用户名和密码。这样既免去了填写资料的麻烦，也减去了记住一对新的用户名和密码的负担。&lt;/li>
+&lt;/ul>
+&lt;h3 id="用hash算法加密密码">用Hash算法加密密码
+&lt;/h3>&lt;p>常用的几种单向的哈希算法：&lt;/p>
+&lt;ul>
+&lt;li>MD5（已被破解，不建议在产品中使用）&lt;/li>
+&lt;li>SHA系列（SHA1、SHA256、SHA384、SHA512等）&lt;/li>
+&lt;/ul>
+&lt;p>只使用哈希算法还是不够安全：&lt;/p>
+&lt;ul>
+&lt;li>猜测密码，找有没有相同的哈希值（类似离线攻击）&lt;/li>
+&lt;li>彩虹表（事先计算好大量密码与对应的各种哈希算法的哈希值）&lt;/li>
+&lt;/ul>
+&lt;h3 id="加盐提高安全性">加盐提高安全性
+&lt;/h3>&lt;p>为了应对彩虹表，我们可以先往明文密码加盐，然后再对加盐之后的密码用哈希算法加密。&lt;/p>
+&lt;p>所谓的盐是一个随机的字符串，往明文密码里加盐就是把明文密码和一个随机的字符串拼接在一起。由于盐在密码校验的时候还要用到，因此通常盐和密码的哈希值是存储在一起的。&lt;/p>
+&lt;p>需要注意的是：我们要确保往每个密码里添加随机的唯一的盐，而不是让所有密码共享一样的盐。（否则可以针对这个盐生成彩虹表）&lt;/p>
+&lt;p>破解方法：&lt;/p>
+&lt;ul>
+&lt;li>穷举法。由于哈希算法的快速高效，任何6位的纯数字密码即使加盐之后也能在数秒之内破解。随着计算能力的提高，黑客们低成本并且高效地破解高级别密码愈发存在可能。&lt;/li>
+&lt;li>通过历次密码泄露事件收集大量常用密码。这些常用的密码即使加盐也很容易破解。&lt;/li>
+&lt;/ul>
+&lt;h3 id="用bcrypt或者pbkdf2增加破解的难度">用BCrypt或者PBKDF2增加破解的难度
+&lt;/h3>&lt;p>为了应对暴力破解法，我们需要非常耗时的哈希算法。BCrypt算法应运而生。&lt;/p>
+&lt;p>BCrypt最大的特点是我们可以通过参数设置重复计算的次数。显然，重复计算的次数越多耗时越长。&lt;/p>
+&lt;p>目前已有开源项目（http://bcrypt.sourceforge.net/）实现了BCrypt算法并被业界广泛采用。&lt;/p>
+&lt;p>PBKDF2同样也可以通过参数设定重复计算的次数从而延长计算时间。[3]&lt;/p>
+&lt;h1 id="安全地传输密码">安全地传输密码
+&lt;/h1>&lt;h3 id="非对称加密">非对称加密
+&lt;/h3>&lt;p>非对称加密的模式是：&lt;/p>
+&lt;ul>
+&lt;li>乙方生成两把密钥（公钥和私钥）。公钥是公开的，任何人都可以获得，私钥则是保密的&lt;/li>
+&lt;li>甲方获取乙方的公钥，然后用它对信息加密&lt;/li>
+&lt;li>乙方得到加密后的信息，用私钥解密。&lt;/li>
+&lt;/ul>
+&lt;p>即使黑客拿到了公钥，没有私钥也是没有办法解密，不考虑彩虹表的情况，完全可以长期使用一对秘钥。[6]&lt;/p>
+&lt;p>&lt;strong>GPG加密&lt;/strong>&lt;/p>
+&lt;p>GPG全称 GNU Privacy Guard，是非对称加密。&lt;/p>
+&lt;p>如果你想给谁发送加密信息，首先你要得到他的公钥，然后通过该公钥加密后传给他，对方利用自己的私钥就可解密并读取文件了。[4]&lt;/p>
+&lt;p>&lt;strong>RSA算法&lt;/strong>&lt;/p>
+&lt;p>RSA算法原理：&lt;a class="link" href="http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html" target="_blank" rel="noopener"
+>http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html&lt;/a>&lt;/p>
+&lt;h3 id="对称加密">对称加密
+&lt;/h3>&lt;p>对称加密的模式是：&lt;/p>
+&lt;ul>
+&lt;li>甲方选择某一种加密规则，对信息进行加密&lt;/li>
+&lt;li>乙方使用同一种规则，对信息进行解密[6]&lt;/li>
+&lt;/ul>
+&lt;p>对称加密两种常用算法：&lt;/p>
+&lt;ul>
+&lt;li>分组密码：每次只对固定长度的比特块进行加密，比如DES;&lt;/li>
+&lt;li>流密码：将提供的大量比特作为输入并可连续运行，从而加密；[5]&lt;/li>
+&lt;/ul>
+&lt;p>客户端和服务端进行通信，采用对称加密，如果只使用一个秘钥，很容易破解；如果每次用不同的秘钥，海量秘钥的管理和传输成本又会比较高。[6]&lt;/p>
+&lt;h3 id="https">HTTPS
+&lt;/h3>&lt;p>基于HTTP协议，通过SSL或TLS提供加密处理数据、验证对方身份以及数据完整性保护。&lt;/p>
+&lt;p>特点：&lt;/p>
+&lt;ul>
+&lt;li>内容加密：采用混合加密技术，中间者无法直接查看明文内容。&lt;/li>
+&lt;li>验证身份：通过证书认证客户端访问的是自己的服务器。&lt;/li>
+&lt;li>保护数据完整性：防止传输的内容被中间人冒充或篡改。[7]&lt;/li>
+&lt;/ul>
+&lt;h1 id="其它可能的攻击方式及相应的防范措施">其它可能的攻击方式及相应的防范措施
+&lt;/h1>&lt;p>这里只考虑从网站服务器上破解用户密码的方法。&lt;/p>
+&lt;h3 id="在线攻击">在线攻击
+&lt;/h3>&lt;p>通过代码在网站的用户验证环节试探用户的用户名和密码。&lt;/p>
+&lt;p>攻击之前需要获取网站的网站协议(&lt;code>http&lt;/code>,&lt;code>https&lt;/code>,&lt;code>ftp&lt;/code>,&lt;code>pop3&lt;/code>,…)、完整的登录url（一般不可见）、登录失败信息(&lt;code>Login failed&lt;/code>,&lt;code>请检查用户名、密码&lt;/code>,…)。&lt;/p>
+&lt;p>攻击流程：比如要攻击用户&amp;rsquo;Admin&amp;rsquo;的密码：使用程序循环模拟用户登录行为，从字典中依次选取密码，组装后向网站发送登录请求(&lt;code>request&lt;/code>)，接收网站的反馈信息（&lt;code>response&lt;/code>）并加以分析，如果没有返回登录失败信息，说明攻击成功。&lt;/p>
+&lt;p>现有的软件工具：&lt;/p>
+&lt;ul>
+&lt;li>获取网站基本信息：&lt;code>BurpSuite&lt;/code>&lt;/li>
+&lt;li>表单密码破解：&lt;code>hydra&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>防范措施：&lt;/p>
+&lt;ul>
+&lt;li>验证码、滑块拼图、限制失败登陆次数等。无法彻底杜绝。[2]&lt;/li>
+&lt;/ul>
+&lt;h3 id="离线攻击">离线攻击
+&lt;/h3>&lt;p>将获取的哈希密码保存到本地，利用自己的计算机对密码进行离线破解。&lt;/p>
+&lt;p>必须要先判断密码的加密方式。之后将字典中的密码进行依次加密、比对。[2]&lt;/p>
+&lt;p>现有的软件工具：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>John the Ripper&lt;/code>&lt;/li>
+&lt;li>&lt;code>hashcat&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>防范措施：&lt;/p>
+&lt;ul>
+&lt;li>优化哈希密码的存储技术，采取特殊的加密方式等。&lt;/li>
+&lt;/ul>
+&lt;h1 id="参考">参考
+&lt;/h1>&lt;p>[1] 渔翁信息. 密码系统安全性的定义 [EB/OL]. &lt;a class="link" href="https://www.fisec.cn/1244.html" target="_blank" rel="noopener"
+>https://www.fisec.cn/1244.html&lt;/a>, 2019-02-12&lt;/p>
+&lt;p>[2] 平平说科技. 黑客技术入门：密码攻击的原理和方法 [EB/OL]. &lt;a class="link" href="https://cloud.tencent.com/developer/news/313489" target="_blank" rel="noopener"
+>https://cloud.tencent.com/developer/news/313489&lt;/a>, 2018-09-13&lt;/p>
+&lt;p>[3] 星朝. 如何安全地存储密码 [EB/OL]. &lt;a class="link" href="https://www.cnblogs.com/jpfss/p/11024665.html" target="_blank" rel="noopener"
+>https://www.cnblogs.com/jpfss/p/11024665.html&lt;/a>, 2019-06-14&lt;/p>
+&lt;p>[4] 守株待兔. GPG 加密解密简明教程 [EB/OL]. &lt;a class="link" href="http://blog.sina.com.cn/s/blog_71f3890901011ig0.html" target="_blank" rel="noopener"
+>http://blog.sina.com.cn/s/blog_71f3890901011ig0.html&lt;/a>, 2012-04-19&lt;/p>
+&lt;p>[5] kph_Hajash. 网络信息传输的安全机制 [EB/OL]. &lt;a class="link" href="https://blog.csdn.net/chuanglan/article/details/80627366" target="_blank" rel="noopener"
+>https://blog.csdn.net/chuanglan/article/details/80627366&lt;/a>, 2018-06-08&lt;/p>
+&lt;p>[6] 徐辛承. 如何加密传输和存储用户密码 [EB/OL]. &lt;a class="link" href="https://zhuanlan.zhihu.com/p/36603247" target="_blank" rel="noopener"
+>https://zhuanlan.zhihu.com/p/36603247&lt;/a>, 2018-05-09&lt;/p>
+&lt;p>[7] 会飞的狗~. HTTP和HTTPS协议，看一篇就够了 [EB/OL]. &lt;a class="link" href="https://blog.csdn.net/xiaoming100001/article/details/81109617" target="_blank" rel="noopener"
+>https://blog.csdn.net/xiaoming100001/article/details/81109617&lt;/a>, 2019-08-03&lt;/p></description></item></channel></rss>

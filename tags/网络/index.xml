@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网络 on wr786</title><link>https://wr786.github.io/tags/%E7%BD%91%E7%BB%9C/</link><description>Recent content in 网络 on wr786</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Nov 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://wr786.github.io/tags/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>Multicast &amp; IGMP</title><link>https://wr786.github.io/p/multicast_and_igmp/</link><pubDate>Fri, 03 Nov 2023 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/multicast_and_igmp/</guid><description>&lt;p>IGMP 是一个网络层协议，用于在 IPv4 的网络上设置多播。&lt;/p>
+&lt;p>具体来说，IGMP 允许设备加入一个多播组。&lt;/p>
+&lt;h2 id="什么是多播multicast">什么是多播（Multicast）？
+&lt;/h2>&lt;p>多播使得一个应用可以仅仅发送一个数据包，就能让网络中的一组 host 都收到，就像群发邮件一样。&lt;/p>
+&lt;p>多播通过在多个设备之间共享 IP 地址来运作。指向该 IP 地址的任何网络流量都将到达共享该 IP 地址的所有设备。&lt;/p>
+&lt;p>因为多播是一对多的，所以只能用类似 SOCK_DGRAM 的 socket，而不能用 SOCK_STREAM。&lt;/p>
+&lt;h2 id="igmp-如何运作">IGMP 如何运作？
+&lt;/h2>&lt;p>连接到网络的计算机和其他设备在想要加入多播组时使用 IGMP。支持 IGMP 的路由器侦听来自设备的 IGMP 传输，以确定哪些设备属于哪些多播组。&lt;/p>
+&lt;p>IGMP 使用为多播预留的 IP 地址。多播 IP 地址在 224.0.0.0 和 239.255.255.255 之间的范围内（即D类网段）。并被分为&lt;/p>
+&lt;ul>
+&lt;li>局部多播地址：在 224.0.0.0～224.0.0.255 之间，这是为路由协议和其他用途保留的地址，路由器并不转发属于此范围的 IP 包。&lt;/li>
+&lt;li>预留多播地址：在 224.0.1.0～238.255.255.255 之间，可用于全球范围（如 Internet ）或网络协议。&lt;/li>
+&lt;li>管理权限多播地址：在 239.0.0.0～239.255.255.255 之间，可供组织内部使用，类似于私有IP地址，不能用于 Internet，可限制多播范围。&lt;/li>
+&lt;/ul>
+&lt;p>每个多播组共享其中一个 IP 地址。当路由器接收到一系列指向该共享 IP 地址的数据包时，它将复制这些数据包，将副本发送给多播组的所有成员。
+IGMP 多播组可以随时更改。设备可以在任何时候发送 IGMP “加入组”或“离开组”消息。IGMP 不限成员数量和位置。&lt;/p>
+&lt;h2 id="使用">使用
+&lt;/h2>&lt;h3 id="命令行">命令行
+&lt;/h3>&lt;p>&lt;strong>加入指定多播组&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo ip addr add 233.54.12.234/32 dev eth1 autojoin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">socat STDIO UDP4-RECV:22001,ip-add-membership&lt;span class="o">=&lt;/span>233.54.12.234:eth1 &amp;gt; /dev/null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>查看加入了哪些多播组&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">netstat -gn
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="程序">程序
+&lt;/h3>&lt;p>setsockopt()参数&lt;/p>
+&lt;ol>
+&lt;li>IP_ADD_MEMBERSHIP: 加入指定多播组&lt;/li>
+&lt;li>IP_DROP_MEMBERSHIP: 退出指定多播组&lt;/li>
+&lt;li>IP_MULTICAST_IF: 设置将要发出multicast包的interface&lt;/li>
+&lt;li>IP_MULTICAST_TTL: 设置发出的multicast包的TTL，默认TTL为1。&lt;/li>
+&lt;li>IP_MULTICAST_LOOP: 设置是否要将发出的multicast包也发给发送者，如果发送者也是那个多播组的一员。&lt;/li>
+&lt;/ol>
+&lt;p>具体使用可见：https://tldp.org/HOWTO/Multicast-HOWTO-6.html&lt;/p>
+&lt;p>一般要写一个收/发multicast的程序，需要：&lt;/p>
+&lt;ol>
+&lt;li>建立一个socket。&lt;/li>
+&lt;li>设置多播的参数，例如超时时间TTL、本地回环许可LOOP等。（纯接收的话不用设置）&lt;/li>
+&lt;li>加入多播组。&lt;/li>
+&lt;li>发送或接收数据。&lt;/li>
+&lt;li>退出多播组。&lt;/li>
+&lt;/ol>
+&lt;h2 id="multicast-without-igmp">Multicast Without IGMP
+&lt;/h2>&lt;p>在实际使用中，我们发现，在有些机器上，即使我们没有加入多播组，也能收到多播信息。&lt;/p>
+&lt;p>这是由于接收者和发送源在&lt;strong>同一内网&lt;/strong>下，所以不需要加入多播组就能收到multicast。&lt;/p>
+&lt;h2 id="参考">参考
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.cloudflare.com/zh-cn/learning/network-layer/what-is-igmp/" target="_blank" rel="noopener"
+>https://www.cloudflare.com/zh-cn/learning/network-layer/what-is-igmp/&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.tenouk.com/Module41c.html" target="_blank" rel="noopener"
+>https://www.tenouk.com/Module41c.html&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://unix.stackexchange.com/questions/140384/creating-multicast-join-for-tcpdump-captures" target="_blank" rel="noopener"
+>https://unix.stackexchange.com/questions/140384/creating-multicast-join-for-tcpdump-captures&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://superuser.com/questions/425665/multicast-streaming-without-igmp" target="_blank" rel="noopener"
+>https://superuser.com/questions/425665/multicast-streaming-without-igmp&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>

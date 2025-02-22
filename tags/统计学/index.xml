@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>统计学 on wr786</title><link>https://wr786.github.io/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/</link><description>Recent content in 统计学 on wr786</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://wr786.github.io/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/index.xml" rel="self" type="application/rss+xml"/><item><title>「田忌赛马」导致的统计偏差趣事一则</title><link>https://wr786.github.io/p/tian-ji-sai-ma/</link><pubDate>Thu, 12 Sep 2024 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/tian-ji-sai-ma/</guid><description>&lt;img src="https://wr786.github.io/p/tian-ji-sai-ma/cover.jpg" alt="Featured image of post 「田忌赛马」导致的统计偏差趣事一则" />&lt;p>我们应该在小学还是初中应该就知道了「田忌赛马」的故事，今天发生的事与这有关。&lt;/p>
+&lt;p>同事重构了一段代码，想要观察与重构前相比的性能变化，于是他写了这样一段逻辑：&lt;/p>
+&lt;blockquote>
+&lt;p>用旧版和新版跑一段相同的输入，然后输出出处理每条数据的耗时。&lt;/p>
+&lt;p>将所有耗时放在一个数组里，排序后输出统计信息（比如平均数、各百分位数）&lt;/p>&lt;/blockquote>
+&lt;p>然后他惊人地发现，在一个百分位数之前，是旧版的速度更快；而在这个百分位数之后，都是新版的速度更快。就平均数而言，也是新版的更快。&lt;/p>
+&lt;p>从代码上分析，理应新版是更快的。那么究竟新版和旧版谁更快呢？为什么会有好几个百分位数都是旧版更快呢？&lt;/p>
+&lt;p>他百思不得其解，觉得这似乎是一种灵异事件。于是求助于我。&lt;/p>
+&lt;p>我一看，也觉得十分奇怪。了解了他的逻辑之后，建议他不要分别统计两组耗时的统计信息，而是不要排序（也就是逐条对应，这样每对耗时都是对应同一个输入情况的），直接用新版减去旧版，然后对这个从旧版到新版耗时的变化进行统计。&lt;/p>
+&lt;p>这个时候结果就很明显了：只有最大的百分位是正数，其他都是负数。那么我们很明显就知道了具体的情况：新版整体上都比旧版快，但是会有一些 jitter。&lt;/p>
+&lt;p>那么在知道了这个的情况下，再回头看看刚刚的「灵异事件」，就能发现这本质上是一种「田忌赛马」了。不妨让我来举个例子。&lt;/p>
+&lt;p>为了简化讨论，我们不妨设排序后旧版耗时是 &lt;code>[2, 4, 6, 8, 10]&lt;/code>，新版从代码上说理应比旧版快，理想情况是 &lt;code>[1, 3, 5, 7, 9]&lt;/code>，这样进行统计，结论显然是新版处理所有输入耗时都更短。&lt;/p>
+&lt;p>但是，如果我们出现了 jitter，比如这个 &lt;code>1&lt;/code> 变成了 &lt;code>10&lt;/code>，那么我们排序后新版耗时就是 &lt;code>[3, 5, 7, 9, 10]&lt;/code>。这样再进行统计的话，我们就能得到意外的结论：新版处理所有输入耗时都更长。但是实际的情况呢？是对于大部分情况都比旧版要快，只是偶尔有 jitter 而已。&lt;/p>
+&lt;p>因为对应关系被打乱了，而导致了完全相反的结论！这完全就是「田忌赛马」的味道！&lt;/p>
+&lt;p>事情的后续就是同事知道了 jitter 的存在，从而进行了相应的修复，于是新版的性能稳定比旧版表现好。&lt;/p>
+&lt;p>可喜可贺。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>密码学 on wr786</title><link>https://wr786.github.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/</link><description>Recent content in 密码学 on wr786</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 28 Dec 2019 00:00:00 +0800</lastBuildDate><atom:link href="https://wr786.github.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/index.xml" rel="self" type="application/rss+xml"/><item><title>网站如何安全地存储和传输用户密码</title><link>https://wr786.github.io/p/how_do_websites_save_passwords_safely/</link><pubDate>Sat, 28 Dec 2019 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/how_do_websites_save_passwords_safely/</guid><description>&lt;h1 id="不同角度对安全的定义">不同角度对安全的定义
+&lt;/h1>&lt;p>&lt;strong>密码系统安全性应满足的条件&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>系统在理论上是不会被破译的，也不能在实践中被破译。&lt;/li>
+&lt;li>系统的机密性不依赖于加密/解密算法和系统的加密，而只取决于密钥的机密性。&lt;/li>
+&lt;li>易于添加/解密操作、在软件/硬件中快速且易于实现。&lt;/li>
+&lt;li>加密/解密算法对密钥空间的全部元素均可用。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>测量密码系统安全性的基本标准&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>计算安全&lt;/strong>：解密加密算法的计算能力与计算时间在实际条件下不可用。&lt;/li>
+&lt;li>&lt;strong>安全证明&lt;/strong>：密码系统的解密依赖于对数学问题深入研究的解决方案。理论上保证安全。&lt;/li>
+&lt;li>&lt;strong>无条件的安全&lt;/strong>：攻击者不能在用没有限制计算能力与时间的基础上破译加密算法。极限状态下的安全。&lt;/li>
+&lt;/ol>
+&lt;p>除了一次性加密算法，理论上还没有绝对安全的密码系统。在实际应用中，只要能够证明所采用的密码系统是计算安全的，就有理由相信加密算法是安全的。[1]&lt;/p>
+&lt;h1 id="安全地存储密码">安全地存储密码
+&lt;/h1>&lt;h3 id="委托给可信任的第三方存储openid技术">委托给可信任的第三方存储——&lt;strong>OpenID&lt;/strong>技术
+&lt;/h3>&lt;p>OpenID的理念是用第三方来完成用户验证。&lt;/p>
+&lt;p>目前国外的网站如谷歌、雅虎等，国内的如腾讯等都已经提供OpenID服务。&lt;/p>
+&lt;p>如果我们开发一个网站并选择谷歌的OpenID服务，那么用户就可以用Gmail的账号和密码登录，接下来用户认证的事情将由谷歌完成。&lt;/p>
+&lt;p>优点：&lt;/p>
+&lt;ul>
+&lt;li>没必要自己存储用户名和密码，也就没必要考虑存储密码的安全性问题，从而减少开发的成本。&lt;/li>
+&lt;li>用户不用在网站上注册新的用户名和密码。这样既免去了填写资料的麻烦，也减去了记住一对新的用户名和密码的负担。&lt;/li>
+&lt;/ul>
+&lt;h3 id="用hash算法加密密码">用Hash算法加密密码
+&lt;/h3>&lt;p>常用的几种单向的哈希算法：&lt;/p>
+&lt;ul>
+&lt;li>MD5（已被破解，不建议在产品中使用）&lt;/li>
+&lt;li>SHA系列（SHA1、SHA256、SHA384、SHA512等）&lt;/li>
+&lt;/ul>
+&lt;p>只使用哈希算法还是不够安全：&lt;/p>
+&lt;ul>
+&lt;li>猜测密码，找有没有相同的哈希值（类似离线攻击）&lt;/li>
+&lt;li>彩虹表（事先计算好大量密码与对应的各种哈希算法的哈希值）&lt;/li>
+&lt;/ul>
+&lt;h3 id="加盐提高安全性">加盐提高安全性
+&lt;/h3>&lt;p>为了应对彩虹表，我们可以先往明文密码加盐，然后再对加盐之后的密码用哈希算法加密。&lt;/p>
+&lt;p>所谓的盐是一个随机的字符串，往明文密码里加盐就是把明文密码和一个随机的字符串拼接在一起。由于盐在密码校验的时候还要用到，因此通常盐和密码的哈希值是存储在一起的。&lt;/p>
+&lt;p>需要注意的是：我们要确保往每个密码里添加随机的唯一的盐，而不是让所有密码共享一样的盐。（否则可以针对这个盐生成彩虹表）&lt;/p>
+&lt;p>破解方法：&lt;/p>
+&lt;ul>
+&lt;li>穷举法。由于哈希算法的快速高效，任何6位的纯数字密码即使加盐之后也能在数秒之内破解。随着计算能力的提高，黑客们低成本并且高效地破解高级别密码愈发存在可能。&lt;/li>
+&lt;li>通过历次密码泄露事件收集大量常用密码。这些常用的密码即使加盐也很容易破解。&lt;/li>
+&lt;/ul>
+&lt;h3 id="用bcrypt或者pbkdf2增加破解的难度">用BCrypt或者PBKDF2增加破解的难度
+&lt;/h3>&lt;p>为了应对暴力破解法，我们需要非常耗时的哈希算法。BCrypt算法应运而生。&lt;/p>
+&lt;p>BCrypt最大的特点是我们可以通过参数设置重复计算的次数。显然，重复计算的次数越多耗时越长。&lt;/p>
+&lt;p>目前已有开源项目（http://bcrypt.sourceforge.net/）实现了BCrypt算法并被业界广泛采用。&lt;/p>
+&lt;p>PBKDF2同样也可以通过参数设定重复计算的次数从而延长计算时间。[3]&lt;/p>
+&lt;h1 id="安全地传输密码">安全地传输密码
+&lt;/h1>&lt;h3 id="非对称加密">非对称加密
+&lt;/h3>&lt;p>非对称加密的模式是：&lt;/p>
+&lt;ul>
+&lt;li>乙方生成两把密钥（公钥和私钥）。公钥是公开的，任何人都可以获得，私钥则是保密的&lt;/li>
+&lt;li>甲方获取乙方的公钥，然后用它对信息加密&lt;/li>
+&lt;li>乙方得到加密后的信息，用私钥解密。&lt;/li>
+&lt;/ul>
+&lt;p>即使黑客拿到了公钥，没有私钥也是没有办法解密，不考虑彩虹表的情况，完全可以长期使用一对秘钥。[6]&lt;/p>
+&lt;p>&lt;strong>GPG加密&lt;/strong>&lt;/p>
+&lt;p>GPG全称 GNU Privacy Guard，是非对称加密。&lt;/p>
+&lt;p>如果你想给谁发送加密信息，首先你要得到他的公钥，然后通过该公钥加密后传给他，对方利用自己的私钥就可解密并读取文件了。[4]&lt;/p>
+&lt;p>&lt;strong>RSA算法&lt;/strong>&lt;/p>
+&lt;p>RSA算法原理：&lt;a class="link" href="http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html" target="_blank" rel="noopener"
+>http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html&lt;/a>&lt;/p>
+&lt;h3 id="对称加密">对称加密
+&lt;/h3>&lt;p>对称加密的模式是：&lt;/p>
+&lt;ul>
+&lt;li>甲方选择某一种加密规则，对信息进行加密&lt;/li>
+&lt;li>乙方使用同一种规则，对信息进行解密[6]&lt;/li>
+&lt;/ul>
+&lt;p>对称加密两种常用算法：&lt;/p>
+&lt;ul>
+&lt;li>分组密码：每次只对固定长度的比特块进行加密，比如DES;&lt;/li>
+&lt;li>流密码：将提供的大量比特作为输入并可连续运行，从而加密；[5]&lt;/li>
+&lt;/ul>
+&lt;p>客户端和服务端进行通信，采用对称加密，如果只使用一个秘钥，很容易破解；如果每次用不同的秘钥，海量秘钥的管理和传输成本又会比较高。[6]&lt;/p>
+&lt;h3 id="https">HTTPS
+&lt;/h3>&lt;p>基于HTTP协议，通过SSL或TLS提供加密处理数据、验证对方身份以及数据完整性保护。&lt;/p>
+&lt;p>特点：&lt;/p>
+&lt;ul>
+&lt;li>内容加密：采用混合加密技术，中间者无法直接查看明文内容。&lt;/li>
+&lt;li>验证身份：通过证书认证客户端访问的是自己的服务器。&lt;/li>
+&lt;li>保护数据完整性：防止传输的内容被中间人冒充或篡改。[7]&lt;/li>
+&lt;/ul>
+&lt;h1 id="其它可能的攻击方式及相应的防范措施">其它可能的攻击方式及相应的防范措施
+&lt;/h1>&lt;p>这里只考虑从网站服务器上破解用户密码的方法。&lt;/p>
+&lt;h3 id="在线攻击">在线攻击
+&lt;/h3>&lt;p>通过代码在网站的用户验证环节试探用户的用户名和密码。&lt;/p>
+&lt;p>攻击之前需要获取网站的网站协议(&lt;code>http&lt;/code>,&lt;code>https&lt;/code>,&lt;code>ftp&lt;/code>,&lt;code>pop3&lt;/code>,…)、完整的登录url（一般不可见）、登录失败信息(&lt;code>Login failed&lt;/code>,&lt;code>请检查用户名、密码&lt;/code>,…)。&lt;/p>
+&lt;p>攻击流程：比如要攻击用户&amp;rsquo;Admin&amp;rsquo;的密码：使用程序循环模拟用户登录行为，从字典中依次选取密码，组装后向网站发送登录请求(&lt;code>request&lt;/code>)，接收网站的反馈信息（&lt;code>response&lt;/code>）并加以分析，如果没有返回登录失败信息，说明攻击成功。&lt;/p>
+&lt;p>现有的软件工具：&lt;/p>
+&lt;ul>
+&lt;li>获取网站基本信息：&lt;code>BurpSuite&lt;/code>&lt;/li>
+&lt;li>表单密码破解：&lt;code>hydra&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>防范措施：&lt;/p>
+&lt;ul>
+&lt;li>验证码、滑块拼图、限制失败登陆次数等。无法彻底杜绝。[2]&lt;/li>
+&lt;/ul>
+&lt;h3 id="离线攻击">离线攻击
+&lt;/h3>&lt;p>将获取的哈希密码保存到本地，利用自己的计算机对密码进行离线破解。&lt;/p>
+&lt;p>必须要先判断密码的加密方式。之后将字典中的密码进行依次加密、比对。[2]&lt;/p>
+&lt;p>现有的软件工具：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>John the Ripper&lt;/code>&lt;/li>
+&lt;li>&lt;code>hashcat&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>防范措施：&lt;/p>
+&lt;ul>
+&lt;li>优化哈希密码的存储技术，采取特殊的加密方式等。&lt;/li>
+&lt;/ul>
+&lt;h1 id="参考">参考
+&lt;/h1>&lt;p>[1] 渔翁信息. 密码系统安全性的定义 [EB/OL]. &lt;a class="link" href="https://www.fisec.cn/1244.html" target="_blank" rel="noopener"
+>https://www.fisec.cn/1244.html&lt;/a>, 2019-02-12&lt;/p>
+&lt;p>[2] 平平说科技. 黑客技术入门：密码攻击的原理和方法 [EB/OL]. &lt;a class="link" href="https://cloud.tencent.com/developer/news/313489" target="_blank" rel="noopener"
+>https://cloud.tencent.com/developer/news/313489&lt;/a>, 2018-09-13&lt;/p>
+&lt;p>[3] 星朝. 如何安全地存储密码 [EB/OL]. &lt;a class="link" href="https://www.cnblogs.com/jpfss/p/11024665.html" target="_blank" rel="noopener"
+>https://www.cnblogs.com/jpfss/p/11024665.html&lt;/a>, 2019-06-14&lt;/p>
+&lt;p>[4] 守株待兔. GPG 加密解密简明教程 [EB/OL]. &lt;a class="link" href="http://blog.sina.com.cn/s/blog_71f3890901011ig0.html" target="_blank" rel="noopener"
+>http://blog.sina.com.cn/s/blog_71f3890901011ig0.html&lt;/a>, 2012-04-19&lt;/p>
+&lt;p>[5] kph_Hajash. 网络信息传输的安全机制 [EB/OL]. &lt;a class="link" href="https://blog.csdn.net/chuanglan/article/details/80627366" target="_blank" rel="noopener"
+>https://blog.csdn.net/chuanglan/article/details/80627366&lt;/a>, 2018-06-08&lt;/p>
+&lt;p>[6] 徐辛承. 如何加密传输和存储用户密码 [EB/OL]. &lt;a class="link" href="https://zhuanlan.zhihu.com/p/36603247" target="_blank" rel="noopener"
+>https://zhuanlan.zhihu.com/p/36603247&lt;/a>, 2018-05-09&lt;/p>
+&lt;p>[7] 会飞的狗~. HTTP和HTTPS协议，看一篇就够了 [EB/OL]. &lt;a class="link" href="https://blog.csdn.net/xiaoming100001/article/details/81109617" target="_blank" rel="noopener"
+>https://blog.csdn.net/xiaoming100001/article/details/81109617&lt;/a>, 2019-08-03&lt;/p></description></item></channel></rss>

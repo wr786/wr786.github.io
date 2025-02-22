@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>算法 on wr786</title><link>https://wr786.github.io/tags/%E7%AE%97%E6%B3%95/</link><description>Recent content in 算法 on wr786</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 07 May 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://wr786.github.io/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>平摊分析 Amortized Analysis</title><link>https://wr786.github.io/p/amortized-analysis/</link><pubDate>Fri, 07 May 2021 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/amortized-analysis/</guid><description>&lt;h2 id="为什么要平摊分析">为什么要平摊分析？
+&lt;/h2>&lt;p>算法往往是会对内存中的数据进行修改的，而同一个算法的多次执行，就会通过对数据的修改而互相影响。&lt;/p>
+&lt;p>为了解决计算上的困难，以及&lt;strong>操作之间的不独立&lt;/strong>而导致的估算上界过松，我们就需要用到平摊分析。&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="平摊分析的三种方法">平摊分析的三种方法
+&lt;/h2>&lt;p>平摊分析总共有三种方法，概括起来就是：&lt;/p>
+&lt;ul>
+&lt;li>聚集分析：n次总代价 / n&lt;/li>
+&lt;li>记账法：把之后要做的操作的代价提前考虑&lt;/li>
+&lt;li>势能法：用势能释放来支付未来操作的代价&lt;/li>
+&lt;/ul>
+&lt;p>其中势能法是我们需要重点掌握的方法。&lt;/p>
+&lt;h3 id="聚集分析-aggregate-method">聚集分析 &lt;em>Aggregate Method&lt;/em>
+&lt;/h3>&lt;blockquote>
+&lt;p>平摊代价 = n次操作总代价 / n&lt;/p>&lt;/blockquote>
+&lt;p>通过总运行时间求平均得到平摊时间，不需要对操作序列的概率分布做假设。&lt;/p>
+&lt;h4 id="栈s上的三种操作">栈S上的三种操作
+&lt;/h4>&lt;p>比如课堂例题，栈上的三种操作(PUSH、POP、MULTIPOP)，我们可以得到一个总时间上界$O(n^2)$，但它并不紧。&lt;/p>
+&lt;p>在栈上，所有POP和MULTIPOP弹出的对象数不会多余PUSH入栈的对象数。&lt;/p>
+&lt;p>因此，若进行n次操作，PUSH的总规模是$O(n)$，这也就使得POP和MULTIPOP的总规模也只能是$O(n)$。那么n次操作的总代价为$O(n)$，我们计算得到平摊代价=$\frac{O(n)}{n} = O(1)$&lt;/p>
+&lt;h4 id="二进制计数器">二进制计数器
+&lt;/h4>&lt;p>观察INCREMENT操作序列&lt;/p>
+&lt;ul>
+&lt;li>每次操作，$A[0]$都反转&lt;/li>
+&lt;li>每两次操作，$A[1]$反转&lt;/li>
+&lt;li>每$2^i$次操作，$A[i]$反转&lt;/li>
+&lt;/ul>
+$$
+\sum_{i=0}^{\lfloor log(n) \rfloor}{\lfloor \frac{n}{2^i} \rfloor} &lt; n\sum_{i=0}^{\infin}\frac{1}{2^i} = 2n
+$$&lt;p>
+那么总时间为$O(n)$，每个操作平坦时间为$O(n) / n = O(1)$&lt;/p>
+&lt;h3 id="记账法-accounting-method">记账法 &lt;em>Accounting Method&lt;/em>
+&lt;/h3>&lt;p>不必算出每一步实际代价，我们用一个虚构的代价，满足对任意k，前k步满足：&lt;/p>
+&lt;blockquote>
+&lt;p>$第k步存款 = \sum_{i=1}^{k}平摊代价_i - \sum_{i=1}^k实际代价_i \geq 0$&lt;/p>&lt;/blockquote>
+&lt;p>如何设计平摊代价？提前考虑之后的代价。&lt;/p>
+&lt;h4 id="栈s上的三种操作-1">栈S上的三种操作
+&lt;/h4>&lt;p>仍然，在栈上，所有POP和MULTIPOP弹出的对象数不会多余PUSH入栈的对象数。&lt;/p>
+&lt;p>那么我们如何设计平摊代价？答案是把POP类操作的帐记在PUSH头上。&lt;/p>
+&lt;p>每次PUSH操作，我们对入栈的对象收费2元，1元用于支付实际费用，另1元存起来，为了支付这个对象以后可能发生的POP操作。&lt;/p>
+&lt;p>由于栈中的对象数不可能为负，而每个对象被POP的次数不会多于它被PUSH的次数，所以存款不会小于0。&lt;/p>
+&lt;p>那么，我们可以对POP、MULTIPOP收费0元。因为PUSH时已经预先付过它们的费用了。&lt;/p>
+&lt;p>进行n次操作，PUSH总共记账$O(2n)$，POP和MULTIPOP总共记账$0$，那么总代价也就是$O(2n) = O(n)$。&lt;/p>
+&lt;p>平摊时间为$O(n)/n = O(1)$。&lt;/p>
+&lt;h4 id="二进制计数器-1">二进制计数器
+&lt;/h4>&lt;p>注意到，每次INCREMENT只会把一个0反转为1，但可能把多个1反转为0.&lt;/p>
+&lt;p>我们每次INCREMENT收费2元，其中1元用来支付将一个0反转为1的实际费用，另1元存在这个反转出来的1上，为了支付以后可能发生的反转为0；那么由于之前的存款，每个被反转为0的1上原本都有1元存款，也就支付了这次INCREMENT的费用。&lt;/p>
+&lt;p>而1的个数总是大于等于0的，所以存款不可能为负。&lt;/p>
+&lt;h3 id="势能法-potential-method">势能法 &lt;em>Potential Method&lt;/em>
+&lt;/h3>&lt;p>利用数据结构$D$的函数$\Phi$定义平摊代价：&lt;/p>
+&lt;blockquote>
+&lt;p>$平摊代价_i = 实际代价_i + \Phi(D_i) - \Phi(D_{i-1})$&lt;/p>&lt;/blockquote>
+&lt;p>其中，对于任意$i$，都要满足$\Phi(D_i) \geq \Phi(D_0)$，这样我们就能保证我们给出了实际代价的一个上界。&lt;/p>
+&lt;p>势能法与记账法有些类似，但是记账法是将存款存储在某些特定的对象之上，而势能法的势能是体现在整个数据结构之上的。&lt;/p>
+&lt;h4 id="栈s上的三种操作-2">栈S上的三种操作
+&lt;/h4>&lt;p>仍然是栈的三操作，我们定义势函数为栈中对象的个数：&lt;/p>
+&lt;ul>
+&lt;li>开始时，栈是空的，所以有$\Phi(D_0) = 0$.&lt;/li>
+&lt;li>栈中对象数始终非负，所以满足$\Phi(D_i) \geq 0 = \Phi(D_0)$.&lt;/li>
+&lt;/ul>
+&lt;p>那么我们就能保证我们给出了实际代价的一个上界。&lt;/p>
+&lt;p>那么对于作用在一个包含$s$个对象的栈上的第$i$个操作，&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>PUSH&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = s+1 - s = 1$&lt;/p>
+&lt;p>平摊代价：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 1+1=2$&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>MULTIPOP(S, k)&lt;/p>
+&lt;p>实际代价：$c_i = min(s, k)$&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = -min(s, k)$&lt;/p>
+&lt;p>平摊代价：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 0$&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>POP&lt;/p>
+&lt;p>同理MULTIPOP，平摊代价也是0.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>我们分析出三种栈操作的平摊代价都是$O(1)$，那么n次操作的总平摊代价就是$O(n)$。&lt;/p>
+&lt;p>而这是总实际代价的一个上界。所以n次操作的最坏时间复杂度为$O(n)$。&lt;/p>
+&lt;h4 id="二进制计数器-2">二进制计数器
+&lt;/h4>&lt;p>我们定义势函数为数组$A[0&amp;hellip;k-1]$中$1$的个数。&lt;/p>
+&lt;p>设第$i$次INCREMENT操作将$t_i$个1反转为0，那么实际代价为$t_i+1$&lt;/p>
+&lt;p>设第$i$次操作后，数组中1的个数为$b_i$，那么&lt;/p>
+&lt;ul>
+&lt;li>如果$b_i = 0$，则第$i$次操作反转了$k$个1，那么$b_{i-1} = t_i = k$&lt;/li>
+&lt;li>如果$b_i &amp;gt; 0$，那么有$b_i = b_{i-1} - t_i + 1$&lt;/li>
+&lt;li>这两种情形都满足：$b_i \leq b_{i-1} - t_i + 1$&lt;/li>
+&lt;/ul>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) \leq (b_{i-1} - t_i + 1) - b_{i-1} = 1 - t_i$&lt;/p>
+&lt;p>平摊代价：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = (t_i + 1) + (1- t_i) = 2$&lt;/p>
+&lt;h2 id="补充习题">补充习题
+&lt;/h2>&lt;h3 id="insert--remove_bottom_half">INSERT &amp;amp; REMOVE_BOTTOM_HALF
+&lt;/h3>&lt;p>&lt;strong>请设计一个数据结构，能够维护一组n个不同整数组成的集合S，能够支持以下两种操作：&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>INSERT(x, S)：将x加入S。&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>REMOVE_BOTTOM_HALF(S)：从S移除最小的$\lceil \frac{n}{2} \rceil$个整数。&lt;/strong>
+&lt;strong>描述你的算法并给出最坏情况下两个操作的时间复杂度。采用势能法进行平摊分析，得到两种操作的平摊时间，选择合适的分析策略，令INSERT(x, S)的平摊时间为$O(1)$，REMOVE_BOTTOM_HALF(S)的平摊时间为$0$.&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>我们用一个无序的数组（或者，动态表）来存放所有的整数。&lt;/p>
+&lt;p>定义势函数$\Phi(D_i) = k|D_i| = kn$，那么&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>REMOVE_BOTTOM_HALF(S):&lt;/p>
+&lt;blockquote>
+&lt;p>注意到，这步操作我们可以利用算法$Select(n, k)$选出中位数，然后再扫描一遍数组，将保留下来的数字复制到一个新的数组中，然后令S指向这个新的数组头，在实际时间2n内完成。&lt;/p>
+&lt;p>但是，为了严谨起见，我们设它是在实际时间$cn$内完成的。其中$c$为大于1的常数。&lt;/p>&lt;/blockquote>
+&lt;p>我们令$k = 2c$，即$\Phi(D_i) = 2c|D_i| = 2cn \geq 0$，那么&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = 2c\lfloor \frac{n}{2} \rfloor - 2cn$&lt;/p>
+$$
+\begin{align}
+a_i &amp;= c_i + \Phi(D_i) - \Phi(D_{i-1}) \\
+&amp;= cn + 2c\lfloor \frac{n}{2} \rfloor - 2cn \\
+&amp;= 2c\lfloor\frac{n}{2}\rfloor - cn \\
+&amp;\leq 0
+\end{align}
+$$&lt;p>
+所以平摊时间为0.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>INSERT(x, S)：&lt;/p>
+&lt;p>势能差：$\Phi(D_i) - \Phi(D_{i-1}) = 2cn - 2c(n-1) = 2c$&lt;/p>
+&lt;p>平摊时间：$a_i = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 1 + 2c = O(1)$&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>显然，最坏情况下，INSERT操作的时间复杂度为$O(1)$，而根据上述分析，REMOVE_BOTTOM_HALF的最坏时间复杂度为$O(n)$。它们的平摊代价根据上述分析，也分别为$O(1)$与$0$。&lt;/p>
+&lt;h3 id="-mtfmove-to-front-链表访问">&lt;strong>[竞争分析]&lt;/strong> MTF(Move-to-Front) 链表访问
+&lt;/h3>&lt;h4 id="mtf算法">MTF算法
+&lt;/h4>&lt;p>考虑一个问题：&lt;/p>
+&lt;p>我们有一个线性表（比如单链表），在它上面：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>我们访问第$i$个元素的访问代价为$i$&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>交换两个相邻元素的代价为某个固定常数值&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>我们的目标是：通过“交换”调整原链表，使得n次访问的总访问代价最小。&lt;/p>
+&lt;p>如果访问序列是已知的，那么我们当然可以针对这个访问序列设计一个最优的调整策略。
+但是，如果我们并不能提前知道访问序列，我们可以考虑采取MTF方式来调整链表。&lt;/p>
+&lt;p>MTF利用了一个事实：对于现实中的问题，比如分页，如果第$i$个元素在时间$t$被访问，那么它比较有可能在时间$t$的不久后再次被访问。&lt;em>（访问局部性 in ICS）&lt;/em>&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>MTF算法&lt;/strong>：
+当第$i$个元素被访问，我们将它移动到线性表的最前面(Move-to-Front)。
+而这个“移动”操作是通过$i-1$次交换完成的。
+所以，当第$i$个元素被访问，总代价为$i+ i-1 = 2i-1$&lt;/p>&lt;/blockquote>
+&lt;p>我们可以利用平摊分析证明：&lt;/p>
+&lt;blockquote>
+&lt;p>MTF不会比任何其他调整策略（包括最优策略）效率的4倍更差，甚至不需要假设存在访问局部性。&lt;/p>&lt;/blockquote>
+&lt;h4 id="定义势函数">定义势函数
+&lt;/h4>&lt;p>设任意一个调整策略为算法A。我们定义在时刻$t$时的势函数为MTF作用下的链表相对于A作用下的链表的逆序对数的2倍。&lt;/p>
+&lt;p>比如，在时刻$t$时，MTF的链表为$(a, b, c, e, d)$，A的链表为$(a, b, c, d, e)$，那么此时的势函数结果就是2。&lt;/p>
+&lt;p>由于初始时，两个算法下的链表都是初始链表，相对逆序对数为0，所以$\Phi(0)=0$。
+而在任意时刻下，相对逆序对数都不可能为负值，所以$\Phi(t) \geq \Phi(0)$。
+那么我们就能保证我们能给出实际代价的一个上界。&lt;/p>
+&lt;h4 id="计算平摊代价">计算平摊代价
+&lt;/h4>&lt;p>现在，我们考虑访问一个元素$x$。设$x$在MTF的链表里在第$k$个位置，在A的链表里在第$i$个位置。我们先假设A并不会交换其他元素。&lt;/p>
+&lt;p>在MTF算法中，访问元素$x$并交换到前面的总代价为$2k-1$。
+在算法A中，访问元素$x$的代价为$i$，设其进行其他操作的代价为$Q$，那么总代价为$i+Q \geq i$。&lt;/p>
+&lt;p>因为MTF算法将$x$移动到了表前面，而这个$x$之前在MTF的链表中前面有$k-1$个元素，在A的链表中之前有$i-1$个元素，所以它最多增加$\min{k-1, i-1}$个新相对逆序对。与此同时，它最少减少了$k-1-\min{k-1, i-1}$个旧相对逆序对。&lt;/p>
+&lt;p>而由势函数的定义，势的变化最多为2倍的两者之差，即$4\min{k-1,i-1}-2(k-1)$&lt;/p>
+$$
+\begin{align}
+c
+&amp;= a + \Delta\Phi \\
+&amp;\leq (2k-1) + 4\min\{k-1, i-1\}-2(k-1) \\
+&amp;\leq 4\min\{k-1, i-1\} + 1 \\
+&amp;\leq 4i \\
+&amp;\leq 4(i+Q)
+\end{align}
+$$&lt;p>
+也就得出了MTF的平摊代价不会比A的平摊代价的4倍更高。&lt;/p>
+&lt;h4 id="思考如果算法a会交换其他元素怎么办">思考：如果算法A会交换其他元素怎么办？
+&lt;/h4>&lt;p>不妨假设A交换了2个相邻元素。
+这并不会影响到MTF的实际代价。这会增加$2$给新势能。
+但同时，它也增加了算法A的$Q$部分$1$。
+那么，MTF的均摊代价虽然增加了$2$，但是它的界限却增加了$4$，结论仍然成立。&lt;/p>
+&lt;p>所以，无论A怎么交换其他元素，都不会影响我们的结论。&lt;/p>
+&lt;h3 id="更多平摊分析经典问题">更多平摊分析经典问题：
+&lt;/h3>&lt;ul>
+&lt;li>Splay树&lt;/li>
+&lt;li>红黑树&lt;/li>
+&lt;li>斐波那契堆&lt;/li>
+&lt;li>并查集&lt;/li>
+&lt;li>最大流 (Push-Relabel 预流推进算法)&lt;/li>
+&lt;li>&lt;strong>动态表&lt;/strong> / 哈希表&lt;/li>
+&lt;li>替罪羊树&lt;/li>
+&lt;/ul></description></item></channel></rss>

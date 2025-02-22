@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>高性能 on wr786</title><link>https://wr786.github.io/tags/%E9%AB%98%E6%80%A7%E8%83%BD/</link><description>Recent content in 高性能 on wr786</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Oct 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://wr786.github.io/tags/%E9%AB%98%E6%80%A7%E8%83%BD/index.xml" rel="self" type="application/rss+xml"/><item><title>【高性能C++奇技淫巧】当你要用很多短字符串当字典key</title><link>https://wr786.github.io/p/hpctricks_map_with_string_keys/</link><pubDate>Sat, 07 Oct 2023 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/hpctricks_map_with_string_keys/</guid><description>&lt;img src="https://wr786.github.io/p/hpctricks_map_with_string_keys/cover.png" alt="Featured image of post 【高性能C++奇技淫巧】当你要用很多短字符串当字典key" />&lt;p>如果你有这样的情景：&lt;/p>
+&lt;ul>
+&lt;li>需要创建一个字典，而字典的key都是很短（长度不超过8）的字符串。&lt;/li>
+&lt;li>同时你又需要追求高性能，希望能达到纳秒级的时延优化。&lt;/li>
+&lt;/ul>
+&lt;p>那么你会怎么做呢？&lt;/p>
+&lt;!-- more -->
+&lt;p>很常见的做法是：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">unordered_map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dict&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>但是其实，我们可以针对这个场合做出神奇的优化：&lt;/p>
+&lt;p>众所周知，字符串是由字符组成的，而每个字符占1个字节，也就是说相当于一个&lt;code>int8_t&lt;/code>或者&lt;code>uint8_t&lt;/code>。
+而如果key都不超过8，那么$8 \times 8 = 64$，我们完全可以将其convert为一个&lt;code>uint64_t&lt;/code>。即&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">unordered_map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">uint64_t&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dict&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">char&lt;/span> &lt;span class="n">str&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">];&lt;/span> &lt;span class="c1">// strlen(str) &amp;lt;= 8
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">dict&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">insert&lt;/span>&lt;span class="p">({&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">reintepret_cast&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">uint64_t&lt;/span>&lt;span class="o">*&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">str&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这么一看你就懂了吧！无须多言。最后我们上个效率对比吧，看看能有多大的提升：&lt;/p>
+&lt;p>&lt;img src="https://wr786.github.io/p/hpctricks_map_with_string_keys/cover.png"
+width="1518"
+height="802"
+srcset="https://wr786.github.io/p/hpctricks_map_with_string_keys/cover_hu_d82f2602f559610c.png 480w, https://wr786.github.io/p/hpctricks_map_with_string_keys/cover_hu_a30eb7eacf9c819d.png 1024w"
+loading="lazy"
+alt="可以看到，find操作是2.6倍的快"
+class="gallery-image"
+data-flex-grow="189"
+data-flex-basis="454px"
+>&lt;/p>
+&lt;p>你也可以&lt;a class="link" href="https://quick-bench.com/q/yiUMubp7mDrmwQh4zJVML8q2Pw4" target="_blank" rel="noopener"
+>在此在线观看这个benchmark&lt;/a>。&lt;/p>
+&lt;p>此外，你也可以考虑采取其它实现方式的map，比如这里有位大神总结的&lt;a class="link" href="https://martin.ankerl.com/2022/08/27/hashmap-bench-01/" target="_blank" rel="noopener"
+>Comprehensive C++ Hashmap Benchmarks 2022&lt;/a>，根据你需要的场景，选择更合适的map，也能继续压低时延。&lt;/p></description></item></channel></rss>
