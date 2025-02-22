@@ -3,6 +3,22 @@
 */
 
 @import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css"); 
+
 :root {
     --base-font-family: "LXGW WenKai";
+}
+
+.article-content {
+    font-size: 1.28em;
+}
+
+.article-content p {
+    margin: 1em;
+}
+
+.article-content pre {
+    display: block;
+    white-space: pre;
+    margin: 1em 0;
+    font-size: 0.85em;
 }

@@ -79,8 +79,6 @@ setsockopt()参数
 
 在实际使用中，我们发现，在有些机器上，即使我们没有加入多播组，也能收到多播信息。
 
-![](/assets/images/MulticastWithoutIGMP.png)
-
 这是由于接收者和发送源在**同一内网**下，所以不需要加入多播组就能收到multicast。
 
 ## 参考
