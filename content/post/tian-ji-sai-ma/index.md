@@ -3,6 +3,7 @@ title: 「田忌赛马」导致的统计偏差趣事一则
 description: 突然想起来，去年曾经有个关于「田忌赛马」的趣事，补写一下吧。
 slug: tian-ji-sai-ma
 date: 2024-09-12 00:00:00+0800
+image: cover.jpg
 categories:
     - 开发杂谈
 tags:

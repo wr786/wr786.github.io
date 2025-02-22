@@ -1,10 +1,14 @@
 ---
 title: Links
 links:
-  - title: GitHub
-    description: GitHub is the world's largest software development platform.
-    website: https://github.com
-    image: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+  - title: wr786
+    description: 我自己！点这里赞助开发者
+    website: buy_me_some_goods.png
+    image: https://avatars.githubusercontent.com/u/32223541?v=4
+  - title: TeddyHuang-00
+    description: 日趋专业的全栈开发者
+    website: https://teddyhuang-00.github.io/zh/
+    image: https://avatars.githubusercontent.com/u/64199650?v=4
 menu:
     main: 
         weight: 4
@@ -14,20 +18,4 @@ menu:
 comments: false
 ---
 
-To use this feature, add `links` section to frontmatter.
-
-This page's frontmatter:
-
-```yaml
-links:
-  - title: GitHub
-    description: GitHub is the world's largest software development platform.
-    website: https://github.com
-    image: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
-  - title: TypeScript
-    description: TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.
-    website: https://www.typescriptlang.org
-    image: ts-logo-128.jpg
-```
-
-`image` field accepts both local and external images.
+友链页，下面是友情链接。
