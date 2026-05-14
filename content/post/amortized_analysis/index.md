@@ -2,10 +2,11 @@
 title: 平摊分析 Amortized Analysis
 slug: amortized-analysis
 date: 2021-05-07 00:00:00+0800
+math: true
 categories:
     - 开发杂谈
 tags:
-    - 算法
+    - algorithms
 --- 
 
 ## 为什么要平摊分析？

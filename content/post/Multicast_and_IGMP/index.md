@@ -8,7 +8,7 @@ date: 2023-11-03 00:00:00+0800
 categories:
   - 开发杂谈
 tags:
-  - 网络
+  - networking
 ---
 
 IGMP 是一个网络层协议，用于在 IPv4 的网络上设置多播。

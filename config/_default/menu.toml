@@ -1,2 +1,7 @@
-# Main menu entries are defined in the content front matter.
+[[main]]
+identifier = "tags"
+name = "Tags"
+url = "/tags/"
+weight = 4
+
 # Social links are configured in params.toml for PaperMod.

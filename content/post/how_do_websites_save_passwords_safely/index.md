@@ -5,8 +5,8 @@ date: 2019-12-28 00:00:00+0800
 categories:
     - 开发杂谈
 tags:
-    - 后端
-    - 密码学
+    - backend
+    - cryptography
 ---
 
 # 不同角度对安全的定义

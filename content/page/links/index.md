@@ -11,7 +11,7 @@ links:
     image: https://avatars.githubusercontent.com/u/64199650?v=4
 menu:
     main: 
-        weight: 4
+        weight: 5
         params:
             icon: link
 

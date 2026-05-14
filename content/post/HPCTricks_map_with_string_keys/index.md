@@ -7,14 +7,15 @@ description: "如果你有这样的情景：
 那么你会怎么做呢？"
 slug: HPCTricks_map_with_string_keys
 date: 2023-10-07 00:00:00+0800
+math: true
 image: cover.png
 categories:
   - 开发杂谈
 tags:
-  - 后端
-  - 高性能
-  - C++
-  - 奇技淫巧
+  - backend
+  - performance
+  - cpp
+  - tricks
 ---
 
 如果你有这样的情景：

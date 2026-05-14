@@ -7,7 +7,7 @@ image: cover.jpg
 categories:
     - 开发杂谈
 tags:
-    - 统计学
+    - statistics
 ---
 
 我们应该在小学还是初中应该就知道了「田忌赛马」的故事，今天发生的事与这有关。
