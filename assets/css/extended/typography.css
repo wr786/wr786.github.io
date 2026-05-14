@@ -1,0 +1,38 @@
+:root {
+  --wr-body-font: "LXGW ZhenKai GB", "LXGW ZhenKai", "LXGW WenKai GB",
+    "LXGW WenKai", "Noto Serif SC", "Source Han Serif SC", "Songti SC",
+    "Microsoft YaHei", system-ui, sans-serif;
+  --wr-mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--wr-body-font);
+  font-weight: normal;
+  letter-spacing: 0;
+}
+
+.post-content,
+.entry-content,
+.page-header,
+.post-title,
+.logo,
+.menu {
+  font-family: var(--wr-body-font);
+}
+
+.post-content {
+  line-height: 1.9;
+}
+
+code,
+kbd,
+pre,
+samp,
+.highlight {
+  font-family: var(--wr-mono-font);
+}
