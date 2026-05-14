@@ -2,6 +2,9 @@
 baseurl = "https://wr786.github.io"
 languageCode = "zh-cn"
 title = "wr786"
+enableRobotsTXT = true
+enableEmoji = true
+mainSections = ["post"]
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, zh-tw, es, de, nl, it, th, el, uk, ar
@@ -16,3 +19,6 @@ disqusShortname = "wr786"
 
 [pagination]
 pagerSize = 5
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
