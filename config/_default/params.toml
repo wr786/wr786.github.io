@@ -2,7 +2,7 @@
 env = "production"
 description = "wr786"
 author = "wr786"
-defaultTheme = "auto"
+defaultTheme = "light"
 ShowReadingTime = true
 ShowShareButtons = true
 ShowPostNavLinks = true
