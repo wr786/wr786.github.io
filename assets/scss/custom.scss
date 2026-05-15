@@ -3,16 +3,18 @@
 */
 
 @font-face {
-    font-family: "TsangerJinKai";
-    src: local("TsangerJinKai"), local("仓耳今楷"),
-        url("https://cdn.jsdelivr.net/npm/kangcdn@1.0.6/%E4%BB%93%E8%80%B3%E4%BB%8A%E6%A5%B7.ttf")
+    font-family: "TsangerJinKai02";
+    src: local("TsangerJinKai02"), local("仓耳今楷02"),
+        url("https://cdn.jsdelivr.net/gh/tw93/kami@main/assets/fonts/TsangerJinKai02-W04.ttf")
             format("truetype");
+    font-weight: 400 500;
+    font-style: normal;
     font-display: swap;
 }
 
 :root {
-    --base-font-family: "TsangerJinKai", "TsangerJinKai02", "TsangerJinKai03",
-        "Tsanger JinKai", "仓耳今楷", "仓耳今楷02", "仓耳今楷03", Charter,
+    --base-font-family: "TsangerJinKai02", "TsangerJinKai03", "Tsanger JinKai",
+        "TsangerJinKai", "仓耳今楷02", "仓耳今楷03", "仓耳今楷", Charter,
         "Charter BT", "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
         "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia,
         serif;
