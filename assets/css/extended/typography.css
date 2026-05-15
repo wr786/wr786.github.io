@@ -11,9 +11,11 @@
   --wr-stone: #6b6a64;
   --wr-tag: #e4ecf5;
   --wr-tag-strong: #d0dce9;
-  --wr-body-font: "LXGW ZhenKai GB", "LXGW ZhenKai", "LXGW WenKai GB",
-    "LXGW WenKai", "Noto Serif SC", "Source Han Serif SC", "Songti SC",
-    Georgia, serif;
+  --wr-body-font: "TsangerJinKai02", "TsangerJinKai03", "Tsanger JinKai",
+    "TsangerJinKai", "仓耳今楷02", "仓耳今楷03", "仓耳今楷", Charter,
+    "Charter BT", "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+    "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia,
+    serif;
   --wr-mono-font: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
     Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 

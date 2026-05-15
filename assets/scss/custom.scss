@@ -2,10 +2,12 @@
     You can add your own custom styles here.
 */
 
-@import url("https://fontsapi.zeoseven.com/2/main/result.css");
-
 :root {
-    --base-font-family: "LXGW ZhenKai GB";
+    --base-font-family: "TsangerJinKai02", "TsangerJinKai03", "Tsanger JinKai",
+        "TsangerJinKai", "仓耳今楷02", "仓耳今楷03", "仓耳今楷", Charter,
+        "Charter BT", "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+        "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia,
+        serif;
 }
 
 .article-content {
