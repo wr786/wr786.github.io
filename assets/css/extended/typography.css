@@ -164,12 +164,23 @@ a:hover {
 }
 
 .social-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   margin-inline-end: 8px;
-  padding: 8px;
+  padding: 0;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--wr-soft-surface);
   color: var(--wr-ink);
+}
+
+.social-icons svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
 }
 
 [data-theme="dark"] .social-icons a {
