@@ -78,9 +78,8 @@ select {
 }
 
 body {
-  background:
-    radial-gradient(circle at top left, rgba(232, 230, 220, 0.55), transparent 34rem),
-    var(--theme);
+  background: var(--theme);
+  background-color: var(--theme);
   color: var(--content);
   font-size: 17px;
   line-height: 1.55;
