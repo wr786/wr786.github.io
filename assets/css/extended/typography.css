@@ -12,6 +12,8 @@
   --wr-canvas: #f5f4ed;
   --wr-ivory: #faf9f5;
   --wr-sand: #e8e6dc;
+  --wr-soft-surface: #f7f6ef;
+  --wr-soft-surface-strong: #faf9f5;
   --wr-ring: #d9d3c3;
   --wr-ink: #1b365d;
   --wr-ink-light: #2d5a8a;
@@ -49,6 +51,8 @@
   --primary: #f4f1e7;
   --secondary: #b8b2a6;
   --tertiary: #30302e;
+  --wr-soft-surface: #1d1d1a;
+  --wr-soft-surface-strong: #242421;
   --content: #e7e0d1;
   --code-bg: #30302e;
   --code-block-bg: #242421;
@@ -165,7 +169,7 @@ a:hover {
   padding: 8px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--wr-ivory);
+  background: var(--wr-soft-surface);
   color: var(--wr-ink);
 }
 
@@ -180,14 +184,15 @@ a:hover {
   border: 1px solid var(--border);
   border-left: 4px solid transparent;
   border-radius: 12px;
-  background: var(--entry);
-  box-shadow: 0 10px 32px rgba(20, 20, 19, 0.045);
-  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  background: var(--wr-soft-surface);
+  box-shadow: 0 6px 20px rgba(20, 20, 19, 0.028);
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 .post-entry:hover {
+  background: var(--wr-soft-surface-strong);
   border-left-color: var(--wr-ink);
-  box-shadow: 0 12px 38px rgba(20, 20, 19, 0.07);
+  box-shadow: 0 10px 30px rgba(20, 20, 19, 0.05);
   transform: translateY(-1px);
 }
 
