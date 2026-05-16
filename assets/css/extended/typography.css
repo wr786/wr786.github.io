@@ -79,7 +79,7 @@ select {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(27, 54, 93, 0.035), transparent 34rem),
+    radial-gradient(circle at top left, rgba(232, 230, 220, 0.55), transparent 34rem),
     var(--theme);
   color: var(--content);
   font-size: 17px;
