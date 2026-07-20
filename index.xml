@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>wr786</title><link>https://wr786.github.io/</link><description>Recent content on wr786</description><image><title>wr786</title><url>https://wr786.github.io/favicon.png</url><link>https://wr786.github.io/favicon.png</link></image><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://wr786.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>「田忌赛马」导致的统计偏差趣事一则</title><link>https://wr786.github.io/p/tian-ji-sai-ma/</link><pubDate>Thu, 12 Sep 2024 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/tian-ji-sai-ma/</guid><description>突然想起来，去年曾经有个关于「田忌赛马」的趣事，补写一下吧。</description></item><item><title>Multicast &amp; IGMP</title><link>https://wr786.github.io/p/multicast_and_igmp/</link><pubDate>Fri, 03 Nov 2023 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/multicast_and_igmp/</guid><description>IGMP 是一个网络层协议，用于在 IPv4 的网络上设置多播。
+具体来说，IGMP 允许设备加入一个多播组。</description></item><item><title>【高性能C++奇技淫巧】当你要用很多短字符串当字典key</title><link>https://wr786.github.io/p/hpctricks_map_with_string_keys/</link><pubDate>Sat, 07 Oct 2023 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/hpctricks_map_with_string_keys/</guid><description>如果你有这样的情景： - 需要创建一个字典，而字典的key都是很短（长度不超过8）的字符串。 - 同时你又需要追求高性能，希望能达到纳秒级的时延优化。
+那么你会怎么做呢？</description></item><item><title>平摊分析 Amortized Analysis</title><link>https://wr786.github.io/p/amortized-analysis/</link><pubDate>Fri, 07 May 2021 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/amortized-analysis/</guid><description>&lt;h2 id="为什么要平摊分析"&gt;为什么要平摊分析？&lt;/h2&gt;
+&lt;p&gt;算法往往是会对内存中的数据进行修改的，而同一个算法的多次执行，就会通过对数据的修改而互相影响。&lt;/p&gt;
+&lt;p&gt;为了解决计算上的困难，以及&lt;strong&gt;操作之间的不独立&lt;/strong&gt;而导致的估算上界过松，我们就需要用到平摊分析。&lt;/p&gt;</description></item><item><title>网站如何安全地存储和传输用户密码</title><link>https://wr786.github.io/p/how_do_websites_save_passwords_safely/</link><pubDate>Sat, 28 Dec 2019 00:00:00 +0800</pubDate><guid>https://wr786.github.io/p/how_do_websites_save_passwords_safely/</guid><description>&lt;h1 id="不同角度对安全的定义"&gt;不同角度对安全的定义&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;密码系统安全性应满足的条件&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;系统在理论上是不会被破译的，也不能在实践中被破译。&lt;/li&gt;
+&lt;li&gt;系统的机密性不依赖于加密/解密算法和系统的加密，而只取决于密钥的机密性。&lt;/li&gt;
+&lt;li&gt;易于添加/解密操作、在软件/硬件中快速且易于实现。&lt;/li&gt;
+&lt;li&gt;加密/解密算法对密钥空间的全部元素均可用。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;测量密码系统安全性的基本标准&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>
