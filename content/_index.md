@@ -1,7 +1,7 @@
 ---
 menu:
     main:
-        name: Home
+        name: 文章
         weight: 1
         params:
             icon: home
