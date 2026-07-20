@@ -1,7 +1,5 @@
 [[main]]
 identifier = "tags"
-name = "Tags"
+name = "标签"
 url = "/tags/"
-weight = 4
-
-# Social links are configured in params.toml for PaperMod.
+weight = 3
